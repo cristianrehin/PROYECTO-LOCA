@@ -3,15 +3,24 @@
 #include<stdlib.h>
 #include<stdbool.h>
 #include<time.h>
+#include "utiles.h"
+
+#define FILA_INICIO_MENU 17 /* fila en donde empieza el menu */
+#define OPCIONES_MENU 6 /* cantidad de opciones del menu */
+#define OPCION_SALIR 6 /* opción del menú que finaliza el programa */
+#define FILA_BARRAS 3 /* filas de las barras de control*/
+#define COLUMNAS_BARRAS 5 /* columnas de las barras de control*/
+
 
 // Declaraciones adelantadas de las funciones
 int obtnrBarrasDeControl();
-void mostrarMenu();
+void mostrarMenu(char VecMenu[OPCIONES_MENU][50]);
 void mostrarMonitor(int t, int d, int inc);
 int crearDemanda();
 int pasarTurnos(int turno);
 int pasarDia(int turno, int dia);
 void mostrarPanel(int cantfuelactivo);
+int seleccionaItem(char VecMenu[OPCIONES_MENU][50]);
 
 int main() {
 	int agua = 0, barras = 0, contIncidentes = 0, demanda, dia = 0, incidentes = 0, opc, pot = 0, pres = 0, temp = 0, turno = 0, vTurb = 0;
@@ -40,6 +49,7 @@ int main() {
 	 pero el jugador debe afrontar las consecuencias de la jornada anterior 
 	 
 	 Objeto a hacer: Reactor, Caracteristicas ->  agua, pot, pres, temp, react, Xe*/
+	char VecMenu[OPCIONES_MENU][50] = {"Iniciar reactor", "Panel de barras de control", "Abrir/Cerrar valvula de vapor", "Nivel de agua", "Terminar turno", "Apagar reactor"};
     srand(time(NULL));
 	estasvivo = true;
 	reactorp = false;
@@ -55,8 +65,8 @@ int main() {
 			printf("------------------- | \n");
 			mostrarPanel(barras);
 			printf("Ingrese una opcion\n");
-			mostrarMenu();
-			scanf(" %d", &opc);
+			mostrarMenu(VecMenu);
+			opc = seleccionaItem(VecMenu);
 			switch (opc) {
 			case 1:
 				/* Iniciar el reactor, en teoria, deberia ser algo que solamente veriamos en el primer turno */
@@ -65,51 +75,52 @@ int main() {
 				    system("cls");
 					printf(" Iniciando reactor\n");
 					printf(" ...Presione Enter para continuar...\n");
-                    getchar(); /* a diferencia del pseudocódigo, espera un Enter, no cualquier tecla */
                     getchar();
 					reactorp = true;
 				} else {
 				    system("cls");
 					printf(" Reactor ya iniciado.\n");
 					printf(" ...Presione Enter para continuar...\n");
-                    getchar(); /* a diferencia del pseudocódigo, espera un Enter, no cualquier tecla */
                     getchar();
 				}
 				system("cls");
 				break;
 			case 2:
+				system("cls");
 				printf(" Ingrese la cantidad de barras de control.\n");
 				barras = obtnrBarrasDeControl();
+				getchar();
 				system("cls");
 				break;
 			case 3:
 				if (vapor==false) {
+					system("cls");
 					printf(" Abriendo Valvulas\n");
 					printf(" ...Presione Enter para continuar...\n");
-                    getchar(); /* a diferencia del pseudocódigo, espera un Enter, no cualquier tecla */
                     getchar();
 					system("cls");
 					vapor = true;
 				} else {
+					system("cls");
 					printf(" Cerrando Valvulas\n");
 					printf(" ...Presione Enter para continuar...\n");
-                    getchar(); /* a diferencia del pseudocódigo, espera un Enter, no cualquier tecla */
                     getchar();
 					system("cls");
 					vapor = false;
 				}
 				break;
 			case 4:
+				system("cls");
 				printf(" Ingrese el nivel de agua en el reactor\n");
 				scanf(" %d", &agua);
 				printf(" ...Presione Enter para continuar...\n");
 				printf(" \n");
-				getchar(); /* a diferencia del pseudocódigo, espera un Enter, no cualquier tecla */
 				getchar();
 				system("cls");
 				/* Esta opcion hecha funcion, agregar un "si" para mostrar si la cantidad de agua subio o bajo con el nuevo valor ingresado - Tener limite */
 				break;
 			case 5:
+				system("cls");
 				printf(" Terminar turno\n");
 				printf(" ...Presione Enter para continuar...\n");
 				printf(" \n");
@@ -117,7 +128,6 @@ int main() {
 				dia = pasarDia(turno, dia);
 				contIncidentes = contIncidentes+1;
 				incidentes = trunc((contIncidentes)/3);
-				getchar(); /* a diferencia del pseudocódigo, espera un Enter, no cualquier tecla */
 				getchar();
 				system("cls");
 				opc = 6;
@@ -125,7 +135,6 @@ int main() {
 			case 6:
 				printf(" Apagando Reactor\n");
 				printf(" ...Presione Enter para continuar...\n");
-				getchar(); /* a diferencia del pseudocódigo, espera un Enter, no cualquier tecla */
 				getchar();
 				system("cls");
 				reactorp = false;
@@ -146,13 +155,13 @@ int obtnrBarrasDeControl() {
 	scanf(" %d", &d);
 	return d;
 }
-void mostrarMenu() {
-	printf("1... Iniciar reactor\n");
-	printf("2... Panel de barras de control\n");
-	printf("3... Abrir/Cerrar valvula de vapor\n");
-	printf("4... Nivel de agua\n");
-	printf("5... Terminar turno\n");
-	printf("6... Apagar reactor\n");
+void mostrarMenu(char VecMenu[][50]) {
+    int i = 0;
+    printf("\033[7m\033[33m %s \033[0m\033[27m\n", VecMenu[i]);
+    for (i = 1; i < OPCION_SALIR; i++)
+    {
+        printf("\033[33m %s \033[0m\n", VecMenu[i]);
+    }
 }
 void mostrarMonitor(int t, int d, int inc) {
 	printf("Dias Sin Incidentes | El dia es: %d\n", d);
@@ -187,13 +196,13 @@ int pasarDia(int turno, int dia) {
 	return dia;
 }
 void mostrarPanel(int cantfuelactivo) {
-	int cont, i, j, k, FILAS = 3, COLUMNAS = 5;
-	int matriz[FILAS][COLUMNAS];
+	int cont, i, j, k;
+	int matriz[FILA_BARRAS][COLUMNAS_BARRAS];
 	printf("\n");
 	
 	cont = 0;
-	for (i=0; i<FILAS; i++) {
-		for (j=0; j<COLUMNAS; j++) {
+	for (i=0; i<FILA_BARRAS; i++) {
+		for (j=0; j<COLUMNAS_BARRAS; j++) {
 			if (i==1) {
 				matriz[i][j] = 1;
 			} else {
@@ -205,9 +214,9 @@ void mostrarPanel(int cantfuelactivo) {
 			}
 		}
 	}
-	for (i=0; i<FILAS; i++) {
+	for (i=0; i<FILA_BARRAS; i++) {
 		for (k=0; k<3; k++) {
-			for (j=0; j<COLUMNAS; j++) {
+			for (j=0; j<COLUMNAS_BARRAS; j++) {
 				if (matriz[i][j]==0) {
 					printf("         ");
 				} else {
@@ -248,4 +257,48 @@ void mostrarPanel(int cantfuelactivo) {
 		}
 	}
 	printf("\n");
+}
+
+int seleccionaItem(char VecMenu[][50])
+{
+    int tecla;
+    int i = 0;
+
+    do
+    {
+        tecla = getch();
+
+        if (tecla == 0 || tecla == 224) /* prefijo de tecla especial */
+        {
+            tecla = getch();
+
+            switch (tecla)
+            {
+            case 80: /* flecha abajo */
+                /* despinta el ítem actual */
+                printf("\033[%d;1H\033[K\033[33m %s \033[0m\n", i+FILA_INICIO_MENU, VecMenu[i]);
+
+                i++;
+                if (i > OPCION_SALIR - 1)
+                    i = 0;
+
+                /* pinta el nuevo ítem seleccionado */
+                printf("\033[%d;1H\033[K\033[7m\033[33m %s \033[0m\033[27m\n", i+FILA_INICIO_MENU, VecMenu[i]);
+                break;
+
+            case 72: /* flecha arriba */
+                printf("\033[%d;1H\033[K\033[33m %s \033[0m\n", i+FILA_INICIO_MENU, VecMenu[i]);
+
+                i--;
+                if (i < 0)
+                    i = OPCION_SALIR - 1;
+
+                printf("\033[%d;1H\033[K\033[7m\033[33m %s \033[0m\033[27m\n", i+FILA_INICIO_MENU, VecMenu[i]);
+                break;
+            }
+        }
+
+    } while (tecla != 13); /* Enter */
+
+    return i+1; // retorna la opción elegida (1 a 6)
 }
