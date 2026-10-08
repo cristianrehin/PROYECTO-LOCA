@@ -67,7 +67,7 @@ int main() {
 	system("cls");
 	do {
 		opc = 0;
-		while (opc!=6) {
+		while (opc!=OPCION_SALIR) {
 			printf("------------------- | La demanda generada por la ciudad es: %d MW.\n", demanda);
 			mostrarMonitor(turno, dia, incidentes);
 			printf("------------------- | \n");
@@ -134,13 +134,13 @@ int main() {
 				printf(" \n");
 				turno = pasarTurnos(turno);
 				dia = pasarDia(turno, dia);
-				contIncidentes = contIncidentes+1;
-				incidentes = trunc((contIncidentes)/3);
+				contIncidentes++;
+				incidentes = trunc((contIncidentes)/CANTIDAD_TURNOS);
 				getchar();
 				system("cls");
-				opc = 6;
+				opc = OPCION_SALIR;
 				break;
-			case 6:
+			case OPCION_SALIR:
 				printf(" Apagando Reactor\n");
 				printf(" ...Presione Enter para continuar...\n");
 				getchar();
