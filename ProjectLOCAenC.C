@@ -157,10 +157,10 @@ int obtnrBarrasDeControl() {
 }
 void mostrarMenu(char VecMenu[][50]) {
     int i = 0;
-    printf("\033[7m\033[33m %s \033[0m\033[27m\n", VecMenu[i]);
+    printf("\033[7m\033[33m %s \033[0m\033[27m\n", VecMenu[i]); //Muestra el primer elemento con el formato de fondo rellenado, con color amarillo
     for (i = 1; i < OPCION_SALIR; i++)
     {
-        printf("\033[33m %s \033[0m\n", VecMenu[i]);
+        printf("\033[33m %s \033[0m\n", VecMenu[i]); //muestra el resto de las opciones como letras normales, con color amarillo
     }
 }
 void mostrarMonitor(int t, int d, int inc) {
@@ -276,24 +276,24 @@ int seleccionaItem(char VecMenu[][50])
             {
             case 80: /* flecha abajo */
                 /* despinta el ítem actual */
-                printf("\033[%d;1H\033[K\033[33m %s \033[0m\n", i+FILA_INICIO_MENU, VecMenu[i]);
+                printf("\033[%d;1H\033[K\033[33m %s \033[0m\n", i+FILA_INICIO_MENU, VecMenu[i]);// el "\033[%d;1H\033[K" es para borrar la línea, más para saber en que línea escribir, \033[33m es para el color amarillo, \033[0m resetea formato de colores
 
                 i++;
                 if (i > OPCION_SALIR - 1)
                     i = 0;
 
                 /* pinta el nuevo ítem seleccionado */
-                printf("\033[%d;1H\033[K\033[7m\033[33m %s \033[0m\033[27m\n", i+FILA_INICIO_MENU, VecMenu[i]);
+                printf("\033[%d;1H\033[K\033[7m\033[33m %s \033[0m\033[27m\n", i+FILA_INICIO_MENU, VecMenu[i]); //[7m\033 es para el fondo rellenado, \033[27m resetea el fondo para que sea normal
                 break;
 
             case 72: /* flecha arriba */
-                printf("\033[%d;1H\033[K\033[33m %s \033[0m\n", i+FILA_INICIO_MENU, VecMenu[i]);
+                printf("\033[%d;1H\033[K\033[33m %s \033[0m\n", i+FILA_INICIO_MENU, VecMenu[i]); // el "\033[%d;1H\033[K" es para borrar la línea, más para saber en que línea escribir, \033[33m es para el color amarillo, \033[0m resetea formato de colores
 
                 i--;
                 if (i < 0)
                     i = OPCION_SALIR - 1;
 
-                printf("\033[%d;1H\033[K\033[7m\033[33m %s \033[0m\033[27m\n", i+FILA_INICIO_MENU, VecMenu[i]);
+                printf("\033[%d;1H\033[K\033[7m\033[33m %s \033[0m\033[27m\n", i+FILA_INICIO_MENU, VecMenu[i]); //[7m\033 es para el fondo rellenado, \033[27m resetea el fondo para que sea normal
                 break;
             }
         }
