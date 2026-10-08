@@ -5,6 +5,14 @@
 #include<time.h>
 #include "utiles.h"
 
+#define NO_EXISTE_BARRA 0 /* Valor para que el panel no muestre la barra en dicho lugar*/
+#define EXISTE_BARRA 1 /* Valor para que el panel muestre la barra en dicho lugar*/
+#define ELEM_SIN_BARRA_IZQ 0 /* barra de control vacia para mostrar en el panel*/
+#define ELEM_SIN_BARRA_DER 4 /* barra de control vacia para mostrar en el panel*/
+#define CANT_LINEAS_BARRAS 3 /* cantidad de lineas que ocupa una barra de control formada con ASCII*/
+#define VALOR_MAX_DEMANDA 250 /* cantidad de demanda maxima para el aleatorio*/
+#define VALOR_MIN_DEMANDA 50 /* cantidad de demanda minima para el aleatorio*/
+#define CANTIDAD_TURNOS 3 /* cantidad de turnos que hay en un dia */
 #define FILA_INICIO_MENU 17 /* fila en donde empieza el menu */
 #define OPCIONES_MENU 6 /* cantidad de opciones del menu */
 #define OPCION_SALIR 6 /* opción del menú que finaliza el programa */
@@ -179,19 +187,19 @@ void mostrarMonitor(int t, int d, int inc) {
 }
 int crearDemanda() {
 	int demanda;
-	demanda = rand()%(200-49)+50;
+	demanda = rand()%(VALOR_MAX_DEMANDA-(VALOR_MIN_DEMANDA-1))+VALOR_MIN_DEMANDA;
 	return demanda;
 }
 int pasarTurnos(int turno) {
-	turno = turno+1;
-	if (turno >= 3) {
+	turno++;
+	if (turno >= CANTIDAD_TURNOS) {
 		turno = 0;
 	}
 	return turno;
 }
 int pasarDia(int turno, int dia) {
-	if (turno % 3 == 0) {
-		dia = dia+1;
+	if (turno % CANTIDAD_TURNOS == 0) {
+		dia++;
 	}
 	return dia;
 }
@@ -204,20 +212,20 @@ void mostrarPanel(int cantfuelactivo) {
 	for (i=0; i<FILA_BARRAS; i++) {
 		for (j=0; j<COLUMNAS_BARRAS; j++) {
 			if (i==1) {
-				matriz[i][j] = 1;
+				matriz[i][j] = EXISTE_BARRA;
 			} else {
-				if (j==0 || j==4) {
-					matriz[i][j] = 0;
+				if (j==ELEM_SIN_BARRA_IZQ || j==ELEM_SIN_BARRA_IZQ) {
+					matriz[i][j] = NO_EXISTE_BARRA;
 				} else {
-					matriz[i][j] = 1;
+					matriz[i][j] = EXISTE_BARRA;
 				}
 			}
 		}
 	}
 	for (i=0; i<FILA_BARRAS; i++) {
-		for (k=0; k<3; k++) {
+		for (k=0; k<CANT_LINEAS_BARRAS; k++) {
 			for (j=0; j<COLUMNAS_BARRAS; j++) {
-				if (matriz[i][j]==0) {
+				if (matriz[i][j]==NO_EXISTE_BARRA) {
 					printf("         ");
 				} else {
 					if (cont<cantfuelactivo) {
@@ -227,7 +235,7 @@ void mostrarPanel(int cantfuelactivo) {
 							break;
 						case 1:
 							printf(" (  X  ) ");
-							cont = cont+1;
+							cont++;
 							break;
 						case 2:
 							printf("  \\___/  ");
@@ -242,7 +250,7 @@ void mostrarPanel(int cantfuelactivo) {
 							break;
 						case 1:
 							printf(" (     ) ");
-							cont = cont+1;
+							cont++;
 							break;
 						case 2:
 							printf("  \\___/  ");
@@ -258,7 +266,6 @@ void mostrarPanel(int cantfuelactivo) {
 	}
 	printf("\n");
 }
-
 int seleccionaItem(char VecMenu[][50])
 {
     int tecla;
