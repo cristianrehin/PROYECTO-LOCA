@@ -141,11 +141,9 @@ Proceso proyectLoca01
 						Escribir " *** SKALA - ADVERTENCIA PREVENTIVA ***"
 						Escribir " Esta a punto de retirar todas las barras de control."
 						Escribir " La reactividad puede aumentar bruscamente. Inserte barras para limitarla."
-						Escribir " Puede continuar bajo su responsabilidad; SKALA no bloqueara la accion."
+						Escribir " Continue bajo su propio riesgo."
 						diasSinAccidentes <- 0
 						eventoSeguridadEnDia <- Verdadero
-						Escribir " ...Presione Enter para continuar..."
-						Esperar Tecla
 					FinSi
 					barras <- barrasSolicitadas
 					Si reactorP = Verdadero Entonces
@@ -184,11 +182,9 @@ Proceso proyectLoca01
 						Escribir " *** SKALA - ADVERTENCIA PREVENTIVA ***"
 						Escribir " Esta reduciendo la circulacion de agua por debajo del 30 %."
 						Escribir " La refrigeracion puede resultar insuficiente. Mantenga agua por encima del 40 % si la temperatura es elevada."
-						Escribir " Puede continuar bajo su responsabilidad; SKALA no bloqueara la accion."
+						Escribir " Continue bajo su propio riesgo."
 						diasSinAccidentes <- 0
 						eventoSeguridadEnDia <- Verdadero
-						Escribir " ...Presione Enter para continuar..."
-						Esperar Tecla
 					FinSi
 					porcentajeAgua <- aguaSolicitada
 					// Agua y reactividad dependen entre si en el modelo del juego.
@@ -806,7 +802,7 @@ Funcion Finales(tipoFin)
 			Escribir ":#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ "
 		2: // Final si llevas 3 dias seguidos por terminando el dia por debajo de la demanda
 			Escribir ""
-			Escribir "Usted no ha cumplido el requisito de energia por mucho tiempo, ha sido detenido por esto"
+			Escribir "Debido a su inoperancia ha sido arrestado por el Comité de Recursos y Energia del Estado."
 			Escribir ""
 			Escribir ""
 			Escribir ""
@@ -849,7 +845,7 @@ Funcion Finales(tipoFin)
 			Escribir "                                          :---------::        :::::                                 "
 		3: // Final si llevas 3 dias seguidos por terminando el dia por encima de la demanda
 			Escribir ""
-			Escribir "Usted dejo que se malgastaran recursos al tener el reactor generando exceso de energia por mucho tiempo, ha sido detenido por esto"
+			Escribir "Debido a su ineficiencia con los recursos previstos ha sido arrestado por el Comité de Recursos y Energia del Estado."
 			Escribir ""
 			Escribir ""
 			Escribir ""
@@ -897,10 +893,9 @@ Funcion Finales(tipoFin)
 			Escribir " Flash Boil"
 			Escribir "==============================================="
 			Escribir ""
-			Escribir "La temperatura alcanzó un punto critico."
+			Escribir "La temperatura alcanzo el punto critico."
 			Escribir "El hervor fue tan repentino que, el agua del sistema se evaporo de forma instantanea."
-			Escribir ""
-			Escribir "La expansion destruyo la central y provoco una explosion"
+			Escribir "La expansion destruyo la central y provoco una explosion" Sin Saltar
 			Escribir "devastadora que arraso el emplazamiento y la ciudad."
 			Escribir "No se detectan sistemas operativos ni comunicaciones."
 			Escribir ""
@@ -953,23 +948,23 @@ Funcion Finales(tipoFin)
 			Escribir " RUPTURA DE LA TAPA DEL REACTOR"
 			Escribir "==============================================="
 			Escribir ""
-			Escribir "La presion supero un punto de no retorno."
-			Escribir "El agua que circulaba dentro del reactor se transformo"
-			Escribir "violentamente en vapor. La explosion desprendio la tapa"
+			Escribir "La presion supero el punto de no retorno."
+			Escribir "El agua que circulaba dentro del reactor se transformo violentamente en vapor." 
+			Escribir "La explosion desprendio la tapa " Sin Saltar
 			Escribir "del reactor y dejo el nucleo expuesto a la atmosfera."
-			Escribir "Material radiactivo y restos del nucleo fueron liberados."
-			Escribir "a la atmosfera y llevados por el viento a las ciudades y paises vecinos"
+			Escribir "Material radiactivo y restos del nucleo fueron liberados " Sin Saltar
+			Escribir "a la atmosfera y llevados por el viento a las ciudades y paises vecinos."
 		6: // Final combinado: ruptura del reactor y del sistema de refrigeracion.
 			Escribir ""
 			Escribir "==============================================="
 			Escribir " COLAPSO COMBINADO"
 			Escribir "==============================================="
 			Escribir ""
-			Escribir "Temperatura y presion entraron simultaneamente en zona critica."
-			Escribir "La estructura del reactor y el sistema de refrigeracion"
-			Escribir "sufrieron rupturas graves. El agua circulante quedo contaminada."
-			Escribir "La evaporacion libero contaminantes radiactivos al ambiente;"
-			Escribir "nubes toxicas se desplazaron sobre la ciudad y alrededores, mientras los"
+			Escribir "Tanto la temperatura como la presion entraron simultaneamente en zona critica."
+			Escribir "La estructura del reactor y el sistema de refrigeracion sufrieron rupturas graves."
+			Escribir "El agua circulante quedo contaminada."
+			Escribir "La evaporacion libero contaminantes radiactivos al ambiente; "Sin Saltar
+			Escribir "nubes toxicas se desplazaron sobre la ciudad y sus alrededores, mientras que los "Sin Saltar
 			Escribir "daños estructurales dispersaron restos y material contaminado."
 			Escribir "La central quedo inutilizada y la region gravemente contaminada."
 			Escribir ""
