@@ -58,12 +58,10 @@ Proceso proyectLoca01
 	Repetir
 		opc <- 0		
 		Mientras opc <> 7 Hacer
-			Escribir "------------------- | La demanda generada por la ciudad es: " demanda " MW."
-			MostrarMonitor(turno,dia,incidentes) 
-			Escribir "------------------- | "
+			MostrarMonitor(turno, dia, incidentes, cantDiasExc, cantDiasDef,demanda)
 			MostrarPanel(barras)
 			// Consulta del estado: solo muestra, NO modifica ninguna variable.
-			MostrarEstado(reactorP, porcentajeAgua, agua, React, temp, pres, vapor, valv, vTurb, potAGen, pot, demanda, cantDiasExc, cantDiasDef)
+			MostrarEstado(reactorP, porcentajeAgua, agua, React, temp, pres, vapor, valv, vTurb, potAGen, pot, demanda)
 			mostarMenuOpc(reactorP)
 			leer opc
 			segun opc Hacer
@@ -226,16 +224,33 @@ Funcion d <- ObtnrBarrasDeControl
 	Hasta Que d >= 0 y d <= 11
 FinFuncion
 
-SubProceso MostrarMonitor(t,d,inc)
-	Escribir "Dias Sin Incidentes | El dia es: " d
+SubProceso MostrarMonitor(t,d,inc,exc,def,dem)
+	Escribir "| ------------------- | La demanda generada por la ciudad es: " dem " MW."
+	Escribir "| Dias Sin Incidentes | El dia es: " d Sin Saltar
+	
+	Si d < 10 Entonces //Este 'si' esta para saber cuanto espacio hay que tener entre que dia es y cuantos dias seguidos de deficit/exceso hay que tener
+		Si exc >= 1 Entonces
+			Escribir "                                       Dias seguidos con exceso de energia: ", exc, "/3"
+		SiNo
+			Escribir "                                       Dias seguidos con deficit de energia: ", def, "/3"
+		FinSi
+	SiNo
+		Si exc >= 1 Entonces
+			Escribir "                                      Dias con exceso de energia: ", exc, "/3"
+		SiNo
+			Escribir "                                      Dias con deficit de energia: ", def, "/3"
+		FinSi
+	FinSi
 	Segun t Hacer
 		0:
-			Escribir "        ",inc,"           | Turno Mañana."
+			Escribir "|         ",inc,"           | Turno Mañana."
 		1:
-			Escribir "        ",inc,"           | Turno Tarde."
+			Escribir "|         ",inc,"           | Turno Tarde."
 		2:
-			Escribir "        ",inc,"           | Turno Noche."
+			Escribir "|         ",inc,"           | Turno Noche."
 	Fin Segun
+	Escribir "| ------------------- | "
+	Escribir ""
 FinSubProceso
 
 Funcion nuevoTurno <- pasarTurnos(turnoActual)
@@ -255,11 +270,12 @@ Funcion nuevoDia <- pasarDia(turnoActual, diaActual)
 FinFuncion
 
 SubProceso MostrarPanel(cantBarrasInsertadas)
-	Escribir " Barras de control insertadas (X = insertada, vacia = retirada):"
+	Escribir "                              Barras de control insertadas (X = insertada, vacia = retirada):"
 	Definir cont,i,j,k Como Entero
 	cont <- 0
 	Para i=1 Hasta 3 Con Paso 1 Hacer
 		Para k=1 Hasta 3 Con Paso 1 Hacer
+			Escribir "                                    " Sin Saltar // Este 'Escribir' esta para centrar las barras 
 			Para j=1 Hasta 5 Con Paso 1 Hacer
 				// El panel tiene 11 posiciones activas; las cuatro esquinas quedan vacias.
 				Si i = 2 o (j <> 1 y j <> 5) Entonces
@@ -499,32 +515,52 @@ funcion demanda <- crearDemanda(anterior)
 FinFuncion
 
 // Solo muestra. No modifica nada.
-SubProceso MostrarEstado(encendido, pctAgua, aguaV, reac, tempe, presi, vapr, valvula, velTurb, potenciaAGenerar, potencia, dem, exc, def)
+SubProceso MostrarEstado(encendido, pctAgua, aguaV, reac, tempe, presi, vapr, valvula, velTurb, potenciaAGenerar, potencia, dem)
 	Si encendido = Verdadero Entonces
-		Escribir " Reactor: ENCENDIDO"
+		Escribir " Reactor: ENCENDIDO                                                       " Sin Saltar
+		MostrarReactividad(encendido,reac)
 	SiNo
-		Escribir " Reactor: APAGADO"
+		Escribir " Reactor: APAGADO                                                         " Sin Saltar
+		MostrarReactividad(encendido,reac)
 	FinSi
-	Escribir " Temperatura: ", redon(tempe*10)/10, " grados C"
+	
+	Si (trunc(tempe) / 10) < 10 Entonces //Verifica la cantidad de unidades que tiene para saber cuantos espacios hay que tener entre la temperatura y la presion
+		Escribir " Temperatura: ", redon(redon(tempe*10)/10), " grados C                                                 " Sin Saltar
+	SiNo
+		Escribir " Temperatura: ", redon(redon(tempe*10)/10), " grados C                                                " Sin Saltar
+	FinSi
 	Escribir " Presion: ", redon(presi*10)/10, " bar"
-	MostrarReactividad(encendido,reac)
-	Escribir " Circulacion de agua: ", pctAgua, " % (", redon(aguaV*100)/100, " millones de litros por turno)"
+	
 	Si valvula = Verdadero Entonces
-		Escribir " Valvula de vapor: ABIERTA"
+		Escribir " Valvula de vapor: ABIERTA                                                " Sin Saltar
+		Si vapr = Verdadero Entonces
+			Escribir " Vapor disponible: SI"
+		SiNo
+			Escribir " Vapor disponible: NO"
+		FinSi
 	SiNo
-		Escribir " Valvula de vapor: CERRADA"
+		Escribir " Valvula de vapor: CERRADA                                                " Sin Saltar
+		Si vapr = Verdadero Entonces
+			Escribir " Vapor disponible: SI"
+		SiNo
+			Escribir " Vapor disponible: NO"
+		FinSi
 	FinSi
-	Si vapr = Verdadero Entonces
-		Escribir " Vapor disponible: SI"
+	
+	Si velTurb / 100 >= 10 Entonces //Verifica la cantidad de unidades que tiene para saber cuantos espacios hay que tener entre la velocidad de la turbina y la potencia generada
+		Escribir " Velocidad de la turbina: ", velTurb, " RPM                                        " Sin Saltar
 	SiNo
-		Escribir " Vapor disponible: NO"
+		Si velTurb = 0 Entonces //Verifica que la velocidad de la turbina sea 0
+			Escribir " Velocidad de la turbina: ", velTurb, " RPM                                           " Sin Saltar
+		SiNo
+			Escribir " Velocidad de la turbina: ", velTurb, " RPM                                         " Sin Saltar			
+		FinSi
 	FinSi
-	Escribir " Velocidad de la turbina: ", velTurb, " RPM"
+	
 	Escribir " Potencia generada al final del turno: ", potenciaAGenerar, " MW"
+	
+	Escribir " Circulacion de agua: ", pctAgua, " % (", redon(aguaV*100)/100, " millones de litros por turno)"
 	CompararGeneracionDemanda(potencia, dem)
-	Escribir " (Los cambios de agua y valvula se aplican al terminar el turno.)"
-	Escribir " Dias con exceso de energia ", exc
-	Escribir " Dias con deficit de energia ", def
 FinSubProceso
 
 // Compara generacion y demanda: deficit / balance / excedente.
@@ -560,7 +596,7 @@ FinFuncion
 
 Funcion Finales(tipoFin)
 	Segun tipoFin Hacer
-		1:
+		1: // Final si elegis la opcion 7
 			Escribir ""
 			Escribir "Usted decide abandonar su puesto, dejando todo atras, escabulliendose en el bosque, por miedo a lo que haran sus supervisores al enterarse."
 			Escribir ""
@@ -602,7 +638,7 @@ Funcion Finales(tipoFin)
 			Escribir "-*%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 			Escribir ":@%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@* "
 			Escribir ":#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ "
-		2:
+		2: // Final si llevas 3 dias seguidos por terminando el dia por debajo de la demanda
 			Escribir ""
 			Escribir "Usted no ha cumplido el requisito de energia por mucho tiempo, ha sido detenido por esto"
 			Escribir ""
@@ -644,7 +680,7 @@ Funcion Finales(tipoFin)
 			Escribir "                                      :::::---=-=-----=-==--:::-------==+*+=--:                     "
 			Escribir "                                         ::----=======-==--------==++++=::                          "
 			Escribir "                                          :---------::        :::::                                 "
-		3:
+		3: // Final si llevas 3 dias seguidos por terminando el dia por encima de la demanda
 			Escribir ""
 			Escribir "Usted dejo que se malgastaran recursos al tener el reactor generando exceso de energia por mucho tiempo, ha sido detenido por esto"
 			Escribir ""
@@ -686,6 +722,10 @@ Funcion Finales(tipoFin)
 			Escribir "                                      :::::---=-=-----=-==--:::-------==+*+=--:                     "
 			Escribir "                                         ::----=======-==--------==++++=::                          "
 			Escribir "                                          :---------::        :::::                                 "
+		4: // Final explosion (a hacer)
+			Limpiar Pantalla
+			Mientras Verdadero Hacer //Esto se hace para tener una pantalla totalmente en negro, y que solo puedas salir si cerras la ventana
+			FinMientras
 		De Otro Modo:
 			Escribir "Final fuera de rango"
 	FinSegun
