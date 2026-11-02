@@ -58,7 +58,7 @@ Proceso proyectLoca01
 	Repetir
 		opc <- 0		
 		Mientras opc <> 7 Hacer
-			MostrarMonitor(turno, dia, incidentes, cantDiasExc, cantDiasDef,demanda)
+			MostrarMonitor(turno, dia, incidentes, cantDiasExc, cantDiasDef, demanda)
 			MostrarPanel(barras)
 			// Consulta del estado: solo muestra, NO modifica ninguna variable.
 			MostrarEstado(reactorP, porcentajeAgua, agua, React, temp, pres, vapor, valv, vTurb, potAGen, pot, demanda)
@@ -504,7 +504,8 @@ FinFuncion
 
 // Demanda: constante todo el dia. Cada dia nuevo varia entre -15 y +15 MW respecto del dia anterior, limitada a 50-200 MW.
 funcion demanda <- crearDemanda(anterior)
-	Definir demanda Como Entero
+	Definir demanda, chance Como Entero
+	chance <- Aleatorio(0,10)
 	demanda <- anterior + aleatorio(0, 30) - 15
 	Si demanda < 50 Entonces
 		demanda <- 50
@@ -512,6 +513,17 @@ funcion demanda <- crearDemanda(anterior)
 	Si demanda > 200 Entonces
 		demanda <- 200
 	FinSi
+	
+	Si chance > 8 Entonces
+		Segun chance Hacer
+			9:
+				demanda <- trunc(demanda*1.2) // Agregar lore de por que aumenta un 20% la demanda
+			10:
+				demanda <- trunc(demanda*0.8) // Agregar lore de por que se reduce un 20% la demanda
+		Fin Segun
+	FinSi
+	
+	
 FinFuncion
 
 // Solo muestra. No modifica nada.
@@ -729,5 +741,4 @@ Funcion Finales(tipoFin)
 		De Otro Modo:
 			Escribir "Final fuera de rango"
 	FinSegun
-FinFuncion
-	
+FinFuncion	
