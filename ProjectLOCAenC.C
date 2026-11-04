@@ -24,20 +24,19 @@ typedef struct{
 // Declaraciones adelantadas de las funciones
 int obtnrBarrasDeControl();
 void mostrarMenu(char VecMenu[OPCIONES_MENU][50]);
-void mostrarMonitor(int t, int d, int inc);
+void mostrarMonitor(int t, int d, int inc, int def, int exc, int dem);
 int crearDemanda();
 int pasarTurnos(int turno);
 int pasarDia(int turno, int dia);
 void mostrarPanel(int cantfuelactivo);
 int seleccionaItem(char VecMenu[OPCIONES_MENU][50]);
 
-
 int main() {
 	Reactor reactorSimulado;
 	reactorSimulado.agua = 0, reactorSimulado.pot = 0, reactorSimulado.pres = 0;
 	reactorSimulado.react = 0, reactorSimulado.temp = 0, reactorSimulado.Xe = 0;
 	reactorSimulado.barras = 0;
-	int contIncidentes = 0, demanda, dia = 0, incidentes = 0, opc, turno = 0, vTurb = 0, aguaAnterior = 0;
+	int demanda, dia = 0, opc, turno = 0, vTurb = 0, aguaAnterior = 0, cantDiasExc = 0, cantDiasDef = 0, diasSinAccidentes = 0;
 	bool estasvivo, reactorp, vapor;
 	/* 'estasVivo' es el logico que controla que el juego se repita turno a turno
 	 Variables:
@@ -72,9 +71,7 @@ int main() {
 	do {
 		opc = 0;
 		while (opc!=OPCION_SALIR) {
-			printf("------------------- | La demanda generada por la ciudad es: %d MW.\n", demanda);
-			mostrarMonitor(turno, dia, incidentes);
-			printf("------------------- | \n");
+			mostrarMonitor(turno, dia, diasSinAccidentes, cantDiasExc, cantDiasDef, demanda);
 			mostrarPanel(reactorSimulado.barras);
 			printf("Ingrese una opcion\n");
 			mostrarMenu(VecMenu);
@@ -141,8 +138,6 @@ int main() {
 				printf(" \n");
 				turno = pasarTurnos(turno);
 				dia = pasarDia(turno, dia);
-				contIncidentes++;
-				incidentes = trunc((contIncidentes)/CANTIDAD_TURNOS);
 				getchar();
 				system("cls");
 				opc = OPCION_SALIR;

@@ -6,74 +6,54 @@
 #define VALOR_MAX_DEMANDA 250 /* cantidad de demanda maxima para el aleatorio*/
 #define VALOR_MIN_DEMANDA 50  /* cantidad de demanda minima para el aleatorio*/
 #define CANTIDAD_TURNOS 3     /* cantidad de turnos que hay en un dia */
-#define FILA_INICIO_MENU 17   /* fila en donde empieza el menu */
+#define FILA_INICIO_MENU 18   /* fila en donde empieza el menu */
 #define OPCION_SALIR 6        /* opción del menú que finaliza el programa */
 #define FILA_BARRAS 3         /* filas de las barras de control*/
 #define COLUMNAS_BARRAS 5     /* columnas de las barras de control*/
 
 void mostrarExplosion()
 {
-
-    for (int i = 0; i < 20; i++)
-        printf("\n");
-    printf("                   @@..@.@ %%#@%%                   \n");
-    printf("                  .@%%:...@.+.@@.           .      \n");
-    printf("                 .=@.@. .# ...@.                  \n");
-    printf("                  @@.@ . *.. .@@.                 \n");
-    printf("           .## @@=:@@@....   .@@=@@*%%%%.           \n");
-    printf("         .@@..:.........@..*. ..  .:..+@          \n");
-    printf("     #@@@=:#@@%%@@@@@@@@@-+@#@@@@@@@@@@.:@@@@-..   \n");
-    printf("   =@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.   \n");
-    Sleep(1500);
-    system("cls");
-    for (int i = 0; i < 16; i++)
-        printf("\n");
-
-    printf("          .. .... .@...@%%#%%...@......             \n");
-    printf("              .@@@@+##-+...:- .@#@@               \n");
-    printf("             .@@. ....   ..   ....%%@*            .\n");
-    printf("             .@@@@@@@@@@@@@@@@@@@@@@%%             \n");
-    printf("                 -:@@.@@@@@@@@@**.                \n");
-    printf("                   @@..@.@ %%#@%%                   \n");
-    printf("                  .@%%:...@.+.@@.           .      \n");
-    printf("                 .=@.@. .# ...@.                  \n");
-    printf("                  @@.@ . *.. .@@.                 \n");
-    printf("           .## @@=:@@@....   .@@=@@*%%%%.           \n");
-    printf("         .@@..:.........@..*. ..  .:..+@          \n");
-    printf("     #@@@=:#@@%%@@@@@@@@@-+@#@@@@@@@@@@.:@@@@-..   \n");
-    printf("   =@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.   \n");
-    Sleep(1500);
-    system("cls");
-
-    printf("          .         ...@@@@@@@..                  \n");
-    printf("               ..@@@@@@. ..  .@@@@+               \n");
-    printf("     .       ..@@. .....      .. .@@.           . \n");
-    printf("        .@@@@@@%%. .:..    . .     .@@@@@*     .   \n");
-    printf("       #@.     ..@           @@....    .@@..      \n");
-    printf("   ...+@.. ....     ...:...   @%%%%@*.    .@@@@#.   \n");
-    printf("  .=@@.. .=#     ...@%%....        .+.   ..  .@@:. \n");
-    printf("  %%@.  . ++.   ..@= :.     .-%%+...      .:@. .@@. \n");
-    printf("..@@.  @-...:. ....          ..+@. ..=. ..%%  =@@.\n");
-    printf("#@:...-@   :@.         ..       #    :@. ..%%-  .@@\n");
-    printf("@@..@...:...@%%.  .%%.   .%%@-:#   .. ..@@.  .%%+  -@@\n");
-    printf("%%@@*@....= ..+@@:..@@@@@@@@.   .*@@@@=. .=-..-@@@.\n");
-    printf(" .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@:=@@@:@.\n");
-    printf("  .@@#@@@%%-#*:@@@@@@@-+.... .@+@@@@@-#*=@@@@@.@@- \n");
-    printf("   .@@@@@@@@@@@@+@@@@..    ..@+@@@@@@@@@@@@:::    \n");
-    printf("     ..:..%%@@@@@@@@@.=.%%....-.@@@@@@@#....        \n");
-    printf("          .. .... .@...@%%#%%...@......             \n");
-    printf("              .@@@@+##-+...:- .@#@@               \n");
-    printf("             .@@. ....   ..   ....%%@*            .\n");
-    printf("             .@@@@@@@@@@@@@@@@@@@@@@%%             \n");
-    printf("                 -:@@.@@@@@@@@@**.                \n");
-    printf("                   @@..@.@ %%#@%%                   \n");
-    printf("                  .@%%:...@.+.@@.           .      \n");
-    printf("                 .=@.@. .# ...@.                  \n");
-    printf("                  @@.@ . *.. .@@.                 \n");
-    printf("           .## @@=:@@@....   .@@=@@*%%%%.           \n");
-    printf("         .@@..:.........@..*. ..  .:..+@          \n");
-    printf("     #@@@=:#@@%%@@@@@@@@@-+@#@@@@@@@@@@.:@@@@-..   \n");
-    printf("   =@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.   \n");
+    printf("\n");
+    printf("Usted decide abandonar su puesto, dejando todo atras, escabulliendose en el bosque, por miedo a lo que haran sus supervisores al enterarse.\n");
+    printf("\n");
+    printf("\n");
+    printf("                                                                                   %%:                                                                           \n");
+    printf("                                                                                  -@+                                                                           \n");
+    printf("                                                                                 -%%@@*                                                                          \n");
+    printf("                                                                                  +@@*                                                                          \n");
+    printf("                                                                                *%%@@@*-                                                                         \n");
+    printf("                                                                                :-@@@%%:                                                                         \n");
+    printf("                                                                               =#@@@@@##+                                                                       \n");
+    printf("                                                                               :-%%@@@@%%=                                                                        \n");
+    printf("                                                            :@:                 =@@@@@@@@*                      *+                   =@:                        \n");
+    printf("                                        +#                  *@#              :#@@@@@@@#-                        %%@:                  #@%%                        \n");
+    printf("                                       :@@=               :*@@@%%=            =@%%#@@@@@@*=                      =@@#                =%%@@@@:                      \n");
+    printf("                                     :@@@@@%%-              -@@@+             -*=+@@@@@@@@+                    -@@@@#                 @@@%%#:                     \n");
+    printf("                                       #@@%%                :@@@@*         -@@@@@@@@@@@@*                    :-=#@@@-              :+#@@@%%                       \n");
+    printf("                                   +###@@@@+::           =*%%@@@%%             :=@@@@@@@@@@@@=                -%%@@@@@@*:             -*@@@@@#                     \n");
+    printf("                   :#               :-+@@@@@@#:          :+@@@@@@@%%         :*@@@@@@@@@@*-         :*      =+-+@@@@*             ***#@@@@+                      \n");
+    printf("                   +@#           :+=: *@@@@:             :+@@@@@%%         :#@@@@@@@@@@@@@:         %%@+     -#@@@@@@@@@@:          -+@@@@@@@@#                   \n");
+    printf("                   @@@:           +@@@@@@@@@@@@@:       *@@@@@@@@#=:      +@@@@%%@@@@@@@@@@@%%:     =@@%%     -+@@@@@@%%              -#@@@@@@-                     \n");
+    printf("                 -*@@@#+=          :=@@@@@@@*+            -@@@@@@%%=        :: *@@@@@@@@@@@@%%:   =*@@@@#++ *@@@@@@@@#           :@@@@@@@@@@#+++-                 \n");
+    printf("                 +%%@@@@%%:       +@@@@@@@@@@@%%+==:       +@@@@@@@@:       -==+@@@@@@@@@@@#--++    %%@@@@@%%-  :--%%@@@@@@@@@*          :@@@@@@@@@*      *           \n");
+    printf("                  *@@@@=            -@@@@@@@@@@@@:     :#@@@@@@@@@@@*   +@@@@@@@@@@@@@@@@@@#-  =#@@@@@@+    -@@@@@@@@@@+       =+*@@@@@@@@@#:      +@#          \n");
+    printf("              -+#@@@@@@@@@@:     :%%@@@@@@@@@@%%=:     #@@@@@@@@@@@@        -*#@@@@@@@@@@@@@@@@%%::=@@@@@@*+-  =@@@@@@@#=         :+***@@@@%%*%%*:    :+%%@@+:        \n");
+    printf("              :#@%%@@@@@@#=     -@@@@@@@@@@@@@@+*@@%%:   :  #@@@@@@@@:     *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%=:-@@@@@@@@@@@@@@@=     :=#@@@@@@@@+::    =@@@=         \n");
+    printf("            :--==#@@@@@@@%%#-     +%%@@@@@@@@@@@@@@@- :+@@@@@@@@@@@@@@@@* =****@@@@@@@@@@@@@#++#@@@@@@@@@+:%%@@@@@@@@@@@@@@#-    *@@@@@@@@@@@@@@@@+:+@@@@@%%        \n");
+    printf("            =@@@@@@@@@@@@*-   :--=*@@@@@@@@@@@@@%%   :=###*%%@@@@@@@@@@#:  -+@@@@@@@@@@@@@@@%%:  -%%@@@@@@@@##@@@@@@@@@@@@@=       :--+@@@@@@@@@@#:  :@@@@%%         \n");
+    printf("       :      -#@@@@@@@@@+--  -@@@@@@@@@@@@@@@*+:     +@=%%@@@@@@@@@=:   %%@@@@@@@@@@@@@@@@@@@#-%%@@@@@@@@@@@@@@@@@@@@@@@@%%*%%#: %%@@@@@@@@@@@@@@@@#-#@@@@@@*        \n");
+    printf("      -@+    :--=@@@@@@@@@@-     :@@@@@@@@@@@@@*-:  =@@@@@@@@@@@@@@@@@@%%%%###@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@:  +@@@@@@@@@@@@@@@@@@@@@@@@@@:      \n");
+    printf("      #@@-  *@@@@@@@@@@@@:    #@@%%@@@@@@@@@@@@@@@%%@=  =@@@@@@@@@@@@@@@=  -%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-  %%@#%%@@@@@@@@@@@@@%%:%%@@@@@@@@@+      \n");
+    printf("    =@@@@@@:  #@@@@@@@@@@@#*  -@@@@@@@@@@@@@@@@@@@@%%:#@@@@@@@@@@@@@@%% :@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%@@@@@@@@@@@@@@@@@@%%%%@@@@@@@@@+      \n");
+    printf("     -@@@@+: +@@@@@@@@@@@@@*    =@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     \n");
+    printf("    %%@@@@@#:@@@@@@@@@@@@@@@@%%#@@@@@@@@@@@@@@@@@@@%%*=%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*:=@@@@@@@@@@@@@@@@@@@@@@@@@@@%%      \n");
+    printf("    +@@@@@@=+@@@@@@@@@@@@@@@#%%@@@@@@@@@@@@@@@@@@@@##@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%     \n");
+    printf(" :@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+   \n");
+    printf("    =@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@:  \n");
+    printf(" :@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#    \n");
+    printf("-*%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+    printf(":@%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@* \n");
+    printf(":#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ \n");
 }
 int obtnrBarrasDeControl()
 {
@@ -90,21 +70,51 @@ void mostrarMenu(char VecMenu[][50])
         printf("\033[33m %s \033[0m\n", VecMenu[i]); // muestra el resto de las opciones como letras normales, con color amarillo
     }
 }
-void mostrarMonitor(int t, int d, int inc)
+void mostrarMonitor(int t, int d, int inc, int def, int exc, int dem)
 {
-    printf("Dias Sin Incidentes | El dia es: %d\n", d);
-    switch (t)
-    {
-    case 0:
-        printf("        %d           | Turno Matutino.\n", inc);
-        break;
-    case 1:
-        printf("        %d           | Turno Vespertino.\n", inc);
-        break;
-    case 2:
-        printf("        %d           | Turno Nocturno.\n", inc);
-        break;
-    }
+	printf("| ------------------- | La demanda generada por la ciudad es: %d MW.\n", dem);
+	printf("| Dias Sin Incidentes | El dia es: %d", d);
+	if (d<10) {
+		/* Este 'si' esta para saber cuanto espacio hay que tener entre que dia es y cuantos dias seguidos de deficit/exceso hay que tener */
+		if (exc>=1) {
+			printf("                                       Dias seguidos con exceso de energia: %d/3\n", exc);
+		} else {
+			printf("                                       Dias seguidos con deficit de energia: %d/3\n", def);
+		}
+	} else {
+		if (exc>=1) {
+			printf("                                      Dias con exceso de energia: %d/3\n", exc);
+		} else {
+			printf("                                      Dias con deficit de energia: %d/3\n", def);
+		}
+	}
+	if (inc<10) {
+		switch (t) {
+		case 0:
+			printf("|         %d           | Turno Matutino.\n", inc);
+			break;
+		case 1:
+			printf("|         %d           | Turno Vespertino.\n", inc);
+			break;
+		case 2:
+			printf("|         %d           | Turno Nocturno.\n", inc);
+			break;
+		}
+	} else {
+		switch (t) {
+		case 0:
+			printf("|         %d          | Turno Matutino.\n", inc);
+			break;
+		case 1:
+			printf("|         %d          | Turno Vespertino.\n", inc);
+			break;
+		case 2:
+			printf("|         %d          | Turno Nocturno.\n", inc);
+			break;
+		}
+	}
+	printf("| ------------------- | \n");
+	printf("\n");
 }
 int crearDemanda()
 {
@@ -263,9 +273,9 @@ float reacividad(int agua, int barras, float xe)
 }
 float temperatura(float react, int agua, float temp)
 {
-    float temp;
-    temp = temp + (100 * react) - (1 - agua / 100);
-    return temp;
+    float t;
+    t = temp + (100 * react) - (1 - agua / 100);
+    return t;
 }
 float presion(float temp, int agua, float pres, bool vapor)
 {
@@ -306,10 +316,11 @@ int vturb(float pres, bool vapor)
             else
                 vturb = 450;
         }
-        return vturb;
     }
+    return vturb;
 }
-int Egenerarada(int vturb)
+
+int Egenerada(int vturb)
 {
     int Egenerada;
     {
@@ -330,11 +341,10 @@ int Egenerarada(int vturb)
         case 3000:
             Egenerada = 326;
             break;
-
         default:
             Egenerada = 0;
             break;
         }
-        return Egenerarada;
+        return Egenerada;
     }
 }
