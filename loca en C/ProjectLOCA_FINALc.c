@@ -7,18 +7,6 @@ errores por favor reportelos en el foro (http://pseint.sourceforge.net). */
 #include<stdlib.h>
 #include<stdbool.h>
 
-/* En C no hay variables para guardar cadenas de texto, sino que debe construirse
-   un arreglo de caracteres (tipo char). El tama�o del arreglo determina la longitud
-   m�xima que puede tener la cadena que guarda (tama�o-1, por el caracter de terminaci�n).
-   La constante MAX_STRLEN define el tama�o m�ximo que se utiliza en este programa para
-   cualquier cadena. */
-#define MAX_STRLEN 256
-
-/* Para las variables que no se pudo determinar el tipo se utiliza la constante
-   SIN_TIPO. El usuario debe reemplazar sus ocurrencias por el tipo adecuado
-   (usualmente int,float,bool, o char[]). */
-#define SIN_TIPO float
-
 // Declaraciones adelantadas de las funciones
 void mostarmenuopc(bool encendido, bool skalaencendida);
 int obtnrbarrasdecontrol();
@@ -32,14 +20,14 @@ float reactividad(float aguav, float barrasctl);
 int escenarioreactividad(float reac);
 void nombreescenario(int reac);
 float variaciontermica(float reac, float aguav);
-float temperatura(SIN_TIPO reac, SIN_TIPO aguav, SIN_TIPO tempactual);
+float temperatura(float reac, float aguav, float tempactual);
 float temperaturaapagado(float tempactual);
 float presionactualizada(float tempactual, float presactual, bool valvulaabierta);
 bool hayvapor(bool encendido, float presi);
 int velocidadturbina(float presactual, bool hay, bool valvulaabierta);
 int potenciaelectrica(float vt);
 int creardemanda(float anterior);
-void mostrarestado(bool encendido, SIN_TIPO pctagua, float aguav, SIN_TIPO reac, float tempe, float presi, bool vapr, bool valvula, float velturb, SIN_TIPO potenciaagenerar, SIN_TIPO potencia, SIN_TIPO dem);
+void mostrarestado(bool encendido, float pctagua, float aguav, float reac, float tempe, float presi, bool vapr, bool valvula, float velturb, float potenciaagenerar, float potencia, float dem);
 void comparargeneraciondemanda(float generacion, float dem);
 void mostrarreactividad(bool encendido, float reac);
 int checkeodiasfinales(float def, float exc);
@@ -47,38 +35,24 @@ void finales(int tipofin);
 bool mostraralertasskala(bool encendido, float temp, float presion, float react, float pctagua);
 int checkeocatastrofes(float tempactual, float presactual);
 
-int main() {
-	float agua;
-	int aguasolicitada;
+typedef struct{
+	int agua;
+ 	int pot;
 	int barras;
-	int barrassolicitadas;
-	int cantdiasdef;
-	int cantdiasexc;
-	int demanda;
-	int dia;
-	int diassinaccidentes;
-	bool eventoseguridadendia;
-	bool huboalertaskala;
-	int incidentesskala;
-	bool incidentetemperaturaactivo;
-	int opc;
-	int porcentajeagua;
-	int pot;
-	int potagen;
 	float pres;
-	int quefinal;
-	float react;
-	bool reactorp;
-	bool skalaactiva;
-	bool skalapendiente;
 	float temp;
-	int turno;
-	int turnosaceptables;
-	int turnosdeficit;
-	int turnosexcedidos;
-	bool valv;
-	bool vapor;
-	int vturb;
+	float react;
+}Reactor;
+
+int main() {
+	Reactor reactorSimulado;
+	reactorSimulado.pot = 0, reactorSimulado.pres = 1;
+	reactorSimulado.react = 0, reactorSimulado.temp = 20, reactorSimulado.barras = 11;
+
+	int demanda, dia = 0, opc, turno = 0, cantDiasExc = 0, cantDiasDef = 0, diasSinAccidentes = 0, aguasolicitada, barrassolicitadas, incidentesskala;
+	int porcentajeagua, potagen, quefinal, turnosaceptables, turnosdeficit, turnosexcedidos, vturb;
+	bool reactorp, vapor, eventoseguridadendia, huboalertaskala, incidentetemperaturaactivo, skalaactiva;
+	bool skalapendiente, valv;
 	
 	/* queFinal es el logico que controla que el juego se repita turno a turno */
 	/* Variables: */
@@ -107,25 +81,13 @@ int main() {
 	/* Las acciones de control (barras, agua, valvula) se aplican UNA vez, al terminar el turno. */
 	quefinal = 0;
 	reactorp = false;
+	porcentajeagua = 50;
+	reactorSimulado.agua = convertiragua(porcentajeagua);
 	/* el juego comienza con el reactor APAGADO */
 	turno = 0;
 	dia = 1;
-	/* el juego comienza en el primer dia */
-	temp = 20;
-	/* temperatura ambiente */
-	pres = 1;
-	/* presion atmosferica (bar) */
-	barras = 11;
-	/* arranque seguro: barras totalmente insertadas */
-	porcentajeagua = 50;
-	agua = convertiragua(porcentajeagua);
-	react = 0;
-	pot = 0;
+	/* el juego comienza en el primer dia */	
 	vturb = 0;
-	cantdiasexc = 0;
-	/* Cantidad de dias seguidos que pasan excediendo el limite de energia */
-	cantdiasdef = 0;
-	/* Cantidad de dias seguidos que pasan con deficit en la generacion de energia */
 	potagen = 0;
 	/* Potencia que generaria al finalizar el turno, no se utiliza para ninguna aritmetica/logica */
 	turnosaceptables = 0;
@@ -139,7 +101,7 @@ int main() {
 	skalapendiente = false;
 	incidentetemperaturaactivo = false;
 	incidentesskala = 0;
-	diassinaccidentes = 0;
+	diasSinAccidentes = 0;
 	eventoseguridadendia = false;
 	huboalertaskala = false;
 	
@@ -148,24 +110,24 @@ int main() {
 		opc = 0;
 		while (opc!=7) {
 			/* Orden de pantalla: panel de barras, monitor, estado del reactor, notificaciones SKALA y menu. */
-			mostrarmonitor(turno, dia, diassinaccidentes, cantdiasexc, cantdiasdef, demanda);
-			mostrarpanel(barras);
+			mostrarmonitor(turno, dia, diasSinAccidentes, cantDiasExc, cantDiasDef, demanda);
+			mostrarpanel(reactorSimulado.barras);
 			/* Consulta del estado: solo muestra, NO modifica ninguna variable. */
-			mostrarestado(reactorp, porcentajeagua, agua, react, temp, pres, vapor, valv, vturb, potagen, pot, demanda);
+			mostrarestado(reactorp, porcentajeagua, reactorSimulado.agua, reactorSimulado.react, reactorSimulado.temp, reactorSimulado.pres, vapor, valv, vturb, potagen, reactorSimulado.pot, demanda);
 			/* SKALA informa al comienzo del turno siguiente al calculo del estado. Solo observa y advierte. */
 			if (skalapendiente==true) {
 				if (skalaactiva==true) {
-					huboalertaskala = mostraralertasskala(reactorp, temp, pres, react, porcentajeagua);
+					huboalertaskala = mostraralertasskala(reactorp, reactorSimulado.temp, reactorSimulado.pres, reactorSimulado.react, porcentajeagua);
 					if (huboalertaskala==true) {
-						diassinaccidentes = 0;
+						diasSinAccidentes = 0;
 						eventoseguridadendia = true;
 					}
-					if (temp>=700) {
+					if (reactorSimulado.temp>=700) {
 						if (incidentetemperaturaactivo==false) {
 							incidentesskala = incidentesskala+1;
 							incidentetemperaturaactivo = true;
 							printf(" SKALA: INCIDENTE TERMICO REGISTRADO. Total de incidentes termicos: %d\n", incidentesskala);
-							diassinaccidentes = 0;
+							diasSinAccidentes = 0;
 							eventoseguridadendia = true;
 						}
 					} else {
@@ -173,12 +135,12 @@ int main() {
 					}
 				} else {
 					/* Aunque SKALA este desactivada, un incidente termico sigue contando como accidente. */
-					if (temp>=700) {
+					if (reactorSimulado.temp>=700) {
 						if (incidentetemperaturaactivo==false) {
 							incidentesskala = incidentesskala+1;
 							incidentetemperaturaactivo = true;
 							printf(" INCIDENTE TERMICO REGISTRADO. Total de incidentes termicos: %d\n", incidentesskala);
-							diassinaccidentes = 0;
+							diasSinAccidentes = 0;
 							eventoseguridadendia = true;
 						}
 					} else {
@@ -199,7 +161,7 @@ int main() {
 					printf(" ...Presione Enter para continuar...\n");
 					printf(" \n");
 					reactorp = true;
-					react = reactividad(agua, barras);
+					reactorSimulado.react = reactividad(reactorSimulado.agua, reactorSimulado.barras);
 				} else {
 					printf(" Reactor ya iniciado. La opcion de encendido no esta disponible.\n");
 					printf(" ...Presione Enter para continuar...\n");
@@ -212,17 +174,17 @@ int main() {
 				printf(" Ingrese la cantidad de barras de control (0 a 11).\n");
 				barrassolicitadas = obtnrbarrasdecontrol();
 				/* Aviso previo: retirar todas las barras. SKALA no bloquea ni revierte la accion. */
-				if (skalaactiva==true && barrassolicitadas==0 && barras>0) {
+				if (skalaactiva==true && barrassolicitadas==0 && reactorSimulado.barras>0) {
 					printf(" *** SKALA - ADVERTENCIA PREVENTIVA ***\n");
 					printf(" Esta a punto de retirar todas las barras de control.\n");
 					printf(" La reactividad puede aumentar bruscamente. Inserte barras para limitarla.\n");
 					printf(" Continue bajo su propio riesgo.\n");
-					diassinaccidentes = 0;
+					diasSinAccidentes = 0;
 					eventoseguridadendia = true;
 				}
-				barras = barrassolicitadas;
+				reactorSimulado.barras = barrassolicitadas;
 				if (reactorp==true) {
-					react = reactividad(agua, barras);
+					reactorSimulado.react = reactividad(reactorSimulado.agua, reactorSimulado.barras);
 				}
 				printf(" ...Presione Enter para continuar...\n");
 				printf(" \n");
@@ -260,14 +222,14 @@ int main() {
 					printf(" Esta reduciendo la circulacion de agua por debajo del 30 %%.\n");
 					printf(" La refrigeracion puede resultar insuficiente. Mantenga agua por encima del 40 %% si la temperatura es elevada.\n");
 					printf(" Continue bajo su propio riesgo.\n");
-					diassinaccidentes = 0;
+					diasSinAccidentes = 0;
 					eventoseguridadendia = true;
 				}
 				porcentajeagua = aguasolicitada;
 				/* Agua y reactividad dependen entre si en el modelo del juego. */
-				agua = convertiragua(porcentajeagua);
+				reactorSimulado.agua = convertiragua(porcentajeagua);
 				if (reactorp==true) {
-					react = reactividad(agua, barras);
+					reactorSimulado.react = reactividad(reactorSimulado.agua, reactorSimulado.barras);
 				}
 				printf(" ...Presione Enter para continuar...\n");
 				printf(" \n");
@@ -283,28 +245,28 @@ int main() {
 				/* (5) Checkea si excede o tiene deficit de energia */
 				/* Actualizar el estado una sola vez por turno. Todas las funciones devuelven */
 				/* un valor; no se pasan variables por referencia. */
-				agua = convertiragua(porcentajeagua);
+				reactorSimulado.agua = convertiragua(porcentajeagua);
 				if (reactorp==true) {
-					temp = temperatura(react, agua, temp);
+					reactorSimulado.temp = temperatura(reactorSimulado.react, reactorSimulado.agua, reactorSimulado.temp);
 				} else {
-					react = 0;
-					temp = temperaturaapagado(temp);
+					reactorSimulado.react = 0;
+					reactorSimulado.temp = temperaturaapagado(reactorSimulado.temp);
 				}
-				pres = presionactualizada(temp, pres, valv);
-				vapor = hayvapor(reactorp, pres);
-				vturb = velocidadturbina(pres, vapor, valv);
+				reactorSimulado.pres = presionactualizada(reactorSimulado.temp, reactorSimulado.pres, valv);
+				vapor = hayvapor(reactorp, reactorSimulado.pres);
+				vturb = velocidadturbina(reactorSimulado.pres, vapor, valv);
 				potagen = potenciaelectrica(vturb);
 				/* pot representa la potencia ACTUAL del turno, no una suma acumulada. */
-				pot = potagen;
+				reactorSimulado.pot = potagen;
 				printf(" Resultado del turno:\n");
-				comparargeneraciondemanda(pot, demanda);
+				comparargeneraciondemanda(reactorSimulado.pot, demanda);
 				/* Las alertas se mostraran una sola vez al entrar al turno siguiente. */
 				skalapendiente = true;
 				/* Evaluacion de este turno con tolerancia de +/- 30 MW. */
-				if (pot>=demanda-30 && pot<=demanda+30) {
+				if (reactorSimulado.pot>=demanda-30 && reactorSimulado.pot<=demanda+30) {
 					turnosaceptables = turnosaceptables+1;
 				} else {
-					if (pot>demanda+30) {
+					if (reactorSimulado.pot>demanda+30) {
 						turnosexcedidos = turnosexcedidos+1;
 					} else {
 						turnosdeficit = turnosdeficit+1;
@@ -315,21 +277,21 @@ int main() {
 					if (turno==0) {
 					/* Un dia sin accidentes solo cuenta si no hubo incidentes ni alertas de SKALA. */
 					if (eventoseguridadendia==false) {
-						diassinaccidentes = diassinaccidentes+1;
+						diasSinAccidentes = diasSinAccidentes+1;
 					}
 					eventoseguridadendia = false;
 					/* Un dia cumple si al menos 2 de sus 3 turnos quedaron dentro de +/- 30 MW. */
 					if (turnosaceptables>=2) {
-						cantdiasexc = 0;
-						cantdiasdef = 0;
+						cantDiasExc = 0;
+						cantDiasDef = 0;
 						printf(" Balance diario aceptable: %d de 3 turnos dentro de la tolerancia.\n", turnosaceptables);
 					} else {
 						if (turnosexcedidos>turnosdeficit) {
-							cantdiasexc = cantdiasexc+1;
-							cantdiasdef = 0;
+							cantDiasExc = cantDiasExc+1;
+							cantDiasDef = 0;
 						} else {
-							cantdiasdef = cantdiasdef+1;
-							cantdiasexc = 0;
+							cantDiasDef = cantDiasDef+1;
+							cantDiasExc = 0;
 						}
 					}
 					demanda = creardemanda(demanda);
@@ -343,9 +305,9 @@ int main() {
 				system("cls");
 				opc = 7;
 				/* sale del bucle interno; el externo continua porque queFinal sigue en Verdadero */
-				quefinal = checkeocatastrofes(temp, pres);
+				quefinal = checkeocatastrofes(reactorSimulado.temp, reactorSimulado.pres);
 				if (quefinal==0) {
-					quefinal = checkeodiasfinales(cantdiasdef, cantdiasexc);
+					quefinal = checkeodiasfinales(cantDiasDef, cantDiasExc);
 				}
 				break;
 			case 6:
@@ -357,7 +319,7 @@ int main() {
 					vapor = false;
 					vturb = 0;
 					potagen = 0;
-					pot = 0;
+					reactorSimulado.pot = 0;
 				} else {
 					printf(" El reactor ya esta apagado.\n");
 				}
@@ -443,7 +405,7 @@ int obtnrbarrasdecontrol() {
 }
 
 void mostrarmonitor(int t, int d, int inc, int exc, int def, int dem) {
-	printf("| ------------------- | La demanda generada por la ciudad es: %d MW.\n", dem);
+	printf("+---------------------+ La demanda generada por la ciudad es: %d MW.\n", dem);
 	printf("| Dias Sin Incidentes | El dia es: %d", d);
 	if (d<10) {
 		/* Este 'si' esta para saber cuanto espacio hay que tener entre que dia es y cuantos dias seguidos de deficit/exceso hay que tener */
@@ -484,7 +446,7 @@ void mostrarmonitor(int t, int d, int inc, int exc, int def, int dem) {
 			break;
 		}
 	}
-	printf("| ------------------- | \n");
+	printf("+---------------------+ \n");
 	printf("\n");
 }
 
@@ -688,7 +650,7 @@ float variaciontermica(float reac, float aguav) {
 
 /* Temperatura con el reactor ENCENDIDO. Piso = ambiente (20 �C): el agua no puede enfriar por debajo del ambiente. */
 /* Techo 850 �C: permite detectar el final catastrofico termico acordado para LOCA. */
-float temperatura(SIN_TIPO reac, SIN_TIPO aguav, SIN_TIPO tempactual) {
+float temperatura(float reac, float aguav, float tempactual) {
 	float nuevatemp;
 	nuevatemp = tempactual+variaciontermica(reac, aguav);
 	if (nuevatemp<20) {
@@ -789,7 +751,7 @@ int creardemanda(float anterior) {
 }
 
 /* Solo muestra. No modifica nada. */
-void mostrarestado(bool encendido, SIN_TIPO pctagua, float aguav, SIN_TIPO reac, float tempe, float presi, bool vapr, bool valvula, float velturb, SIN_TIPO potenciaagenerar, SIN_TIPO potencia, SIN_TIPO dem) {
+void mostrarestado(bool encendido, float pctagua, float aguav, float reac, float tempe, float presi, bool vapr, bool valvula, float velturb, float potenciaagenerar, float potencia, float dem) {
 	if (encendido==true) {
 		printf(" Reactor: ENCENDIDO                                                       ");
 		mostrarreactividad(encendido, reac);
@@ -821,13 +783,13 @@ void mostrarestado(bool encendido, SIN_TIPO pctagua, float aguav, SIN_TIPO reac,
 	}
 	if (velturb/100>=10) {
 		/* Verifica la cantidad de unidades que tiene para saber cuantos espacios hay que tener entre la velocidad de la turbina y la potencia generada */
-		printf(" Velocidad de la turbina: %.2f RPM                                        ", velturb);
+		printf(" Velocidad de la turbina: %.0f RPM                                        ", velturb);
 	} else {
 		if (velturb==0) {
 			/* Verifica que la velocidad de la turbina sea 0 */
-			printf(" Velocidad de la turbina: %.2f RPM                                           ", velturb);
+			printf(" Velocidad de la turbina: %.0f RPM                                           ", velturb);
 		} else {
-			printf(" Velocidad de la turbina: %.2f RPM                                         ", velturb);
+			printf(" Velocidad de la turbina: %.0f RPM                                         ", velturb);
 		}
 	}
 	printf(" Potencia generada al final del turno: %.2f MW\n", potenciaagenerar);
