@@ -50,7 +50,6 @@ int PotenciaElectrica(float vt);
 int CheckeoDiasFinales(float def, float exc);
 float ConvertirAgua(float pctagua);
 float Reactividad(float aguav, float barrasctl);
-float VariacionTermica(float reac, float aguav);
 float Temperatura(float , float , float );
 float TemperaturaApagado(float tempactual);
 float PresionActualizada(float tempactual, float presactual, bool valvulaabierta);
