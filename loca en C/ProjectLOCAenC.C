@@ -6,9 +6,7 @@
 #include "utiles.h"
 #include "funciones.h"
 
-#define CANTIDAD_TURNOS 3 /* cantidad de turnos que hay en un dia */
 #define OPCIONES_MENU 7	  /* cantidad de opciones del menu */
-#define ULTIMA_OPCION 7	  /* ultima opcion del menu */
 #define TOLERANCIA 30 	  /* tolerancia de la energia generada y la demandada*/
 #define ESCAPE 1 		  /* final 1: escape*/
 

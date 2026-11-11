@@ -716,7 +716,7 @@ void Finales(int tipofin)
 		printf(":@%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@* \n");
 		printf(":#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+ \n");
 		break;
-	case 2:
+	case FINAL_DEFICIT:
 		/* Final si llevas 3 dias seguidos por terminando el dia por debajo de la demanda */
 		printf("Debido a su inoperancia ha sido arrestado por el Comite de Recursos y Energia del Estado.\n");
 		printf("\n");
@@ -759,7 +759,7 @@ void Finales(int tipofin)
 		printf("                                         ::----=======-==--------==++++=::                          \n");
 		printf("                                          :---------::        :::::                                 \n");
 		break;
-	case 3:
+	case FINAL_EXCESO:
 		/* Final si llevas 3 dias seguidos por terminando el dia por encima de la demanda */
 		printf("Debido a su ineficiencia con los recursos previstos ha sido arrestado por el Comite de Recursos y Energia del Estado.\n");
 		printf("\n");
@@ -803,7 +803,7 @@ void Finales(int tipofin)
 		printf("                                          :---------::        :::::                                 \n");
 		printf("\n");
 		break;
-	case 4:
+	case FINAL_TEMPERATURA:
 		/* Final termico: flash boil y destruccion total de la central. */
 		printf("\n");
 		printf("===============================================\n");
@@ -860,7 +860,7 @@ void Finales(int tipofin)
 		printf("\n");
 		printf("\n");
 		break;
-	case 5:
+	case FINAL_PRESION:
 		/* Final por sobrepresion: ruptura del reactor. */
 		printf("\n");
 		printf("\033[33m===============================================\033[0m\n");
@@ -872,7 +872,7 @@ void Finales(int tipofin)
 		printf("\033[33mLa explosion desprendio la tapa del reactor y dejo el nucleo expuesto a la atmosfera.\033[0m\n");
 		printf("\033[33mMaterial radiactivo y restos del nucleo fueron liberados a la atmosfera y llevados por el viento a las ciudades y paises vecinos.\033[0m\n");
 		break;
-	case 6:
+	case FINAL_MIXTO:
 		/* Final combinado: ruptura del reactor y del sistema de refrigeracion. */
 		printf("\n");
 		printf("\033[33m===============================================\033[0m\n");
