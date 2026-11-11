@@ -56,16 +56,6 @@ float TemperaturaApagado(float tempactual);
 float PresionActualizada(float tempactual, float presactual, bool valvulaabierta);
 bool HayVapor(bool encendido, float presi);
 
-// Definir la estructura reactor
-typedef struct{
-	int agua;
-	int pot;
-	int barras;
-	float pres;
-	float temp;
-	float react;
-} Reactor;
-
 int ObtnrBarrasDeControl()
 {
     int d;

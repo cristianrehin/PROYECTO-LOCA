@@ -10,6 +10,16 @@
 #define TOLERANCIA 30 	  /* tolerancia de la energia generada y la demandada*/
 #define ESCAPE 1 		  /* final 1: escape*/
 
+// Definir la estructura reactor
+typedef struct{
+	int agua;
+	int pot;
+	int barras;
+	float pres;
+	float temp;
+	float react;
+} Reactor;
+
 int main()
 {
 	Reactor reactorSimulado;
