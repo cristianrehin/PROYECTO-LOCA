@@ -5,13 +5,17 @@
 #define CANT_LINEAS_BARRAS 3  		/* cantidad de lineas que ocupa una barra de control formada con ASCII*/
 #define VALOR_MAX_DEMANDA 250 		/* cantidad de demanda maxima para el aleatorio*/
 #define VALOR_MIN_DEMANDA 50  		/* cantidad de demanda minima para el aleatorio*/
+#define MIN_DEM 50					/* minimo de la demanda*/
+#define MAX_DEM 200					/* maximo de la demanda*/
 #define CANTIDAD_TURNOS 3     		/* cantidad de turnos que hay en un dia */
 #define FILA_INICIO_MENU 25   		/* fila en donde empieza el menu */
+#define OPCIONES_MENU 7	  			/* cantidad de opciones del menu */
 #define ULTIMA_OPCION 7       		/* opción del menú que finaliza el programa */
 #define FILA_BARRAS 3         		/* filas de las barras de control*/
 #define COLUMNAS_BARRAS 5     		/* columnas de las barras de control*/
 #define TOLERANCIA 30 		  		/* tolerancia de la energia generada y la demandada*/
 #define LIMITE_DIAS_SEGUIDOS 5		/* cantidad de dias seguidos que se puede estar en exceso/deficit*/
+#define VARIACION_DEMANDA 15		/* variacion de la demanda por cada dia*/
 #define FINAL_ESCAPE 1        		/* final 1, escapar*/
 #define FINAL_DEFICIT 2				/* final 2, preso por deficit de energia*/
 #define FINAL_EXCESO 3				/* final 3, preso por exceso de energia*/
@@ -24,6 +28,33 @@
 #define RANGO_FINAL_MIXTO_TMX 799	/* final numero 6, valor maximo de temperatura*/
 #define RANGO_FINAL_MIXTO_PMN 100	/* final numero 6, valor minimo de presion*/
 #define RANGO_FINAL_MIXTO_PMX 199	/* final numero 6, valor maximo de presion*/
+
+// Declaraciones adelantadas de las funciones
+void MostrarMenu(char VecMenu[OPCIONES_MENU][50]);
+void MostrarMonitor(int t, int d, int inc, int def, int exc, int dem);
+void MostrarEstado(bool encendido, float pctagua, float aguav, float reac, float tempe, float presi, bool vapr, bool valvula, float velturb, float potenciaagenerar, float potencia, float dem);
+void CompararGeneracionDemanda(float generacion, float dem);
+void MostrarReactividad(bool encendido, float reac);
+void MostrarPanel(int cantfuelactivo);
+void NombreEscenario(float reac);
+void Finales(int tipofin);
+void MostrarReactividad(bool encendido, float reac);
+int CrearDemanda();
+int PasarTurnos(int turno);
+int PasarDia(int turno, int dia);
+int SeleccionaItem(char VecMenu[OPCIONES_MENU][50]);
+int ObtenerPorcentajeAgua(int actual);
+int CheckeoCatastrofes(float tempactual, float presactual);
+int VelocidadTurbina(float presactual, bool hay, bool valvulaabierta);
+int PotenciaElectrica(float vt);
+int CheckeoDiasFinales(float def, float exc);
+float ConvertirAgua(float pctagua);
+float Reactividad(float aguav, float barrasctl);
+float VariacionTermica(float reac, float aguav);
+float Temperatura(float , float , float );
+float TemperaturaApagado(float tempactual);
+float PresionActualizada(float tempactual, float presactual, bool valvulaabierta);
+bool HayVapor(bool encendido, float presi);
 
 int ObtnrBarrasDeControl()
 {
@@ -91,15 +122,15 @@ int CrearDemanda(float anterior)
 {
 	int chance;
 	int demanda;
-	chance = (0 + rand() % 10 - 0 + 1);
-	demanda = anterior + (0 + rand() % 30 - 0 + 1) - 15;
-	if (demanda < 50)
+	chance = (rand() % 10 - 0 + 1);
+	demanda = anterior + (rand() % (VARIACION_DEMANDA*2) - 0 + 1) - VARIACION_DEMANDA;
+	if (demanda < MIN_DEM)
 	{
-		demanda = 50;
+		demanda = MIN_DEM;
 	}
-	if (demanda > 200)
+	if (demanda > MAX_DEM)
 	{
-		demanda = 200;
+		demanda = MAX_DEM;
 	}
 	if (chance > 8)
 	{
@@ -107,11 +138,9 @@ int CrearDemanda(float anterior)
 		{
 		case 9:
 			demanda = trunc(demanda * 1.2);
-			/* Agregar lore de por que aumenta un 20% la demanda */
 			break;
 		case 10:
 			demanda = trunc(demanda * 0.8);
-			/* Agregar lore de por que se reduce un 20% la demanda */
 			break;
 		}
 	}
@@ -516,7 +545,6 @@ int ObtenerPorcentajeAgua(int actual)
 }
 void NombreEscenario(float reac)
 {
-	int e;
 	if (reac > 0.25)
 	{
 		printf("\033[31mpositiva alta\033[0m\n");
@@ -635,7 +663,7 @@ void MostrarEstado(bool encendido, float pctagua, float aguav, float reac, float
 	}
 	printf("\033[33m Potencia generada al final del turno: %.2f MW\033[0m\n", potenciaagenerar);
 	if (pctagua <=30)
-		printf("\033[33m Circulacion de agua: \033[31m%.2f %%\033[0m (\033[31m%.2f \033[0m\033[33mmillones de litros por turno)\033[0m\n", pctagua, round((aguav * 100)) / 100);
+		printf("\033[33m Circulacion de agua: \033[31m%.2f %%\033[0m \033[33m(\033[0m\033[31m%.2f \033[0m\033[33mmillones de litros por turno)\033[0m\n", pctagua, round((aguav * 100)) / 100);
 	else
 		printf("\033[33m Circulacion de agua: %.2f %% (%.2f millones de litros por turno)\033[0m\n", pctagua, round((aguav * 100)) / 100);
 	CompararGeneracionDemanda(potencia, dem);

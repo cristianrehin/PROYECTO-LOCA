@@ -9,8 +9,8 @@
 #define CANTIDAD_TURNOS 3 /* cantidad de turnos que hay en un dia */
 #define OPCIONES_MENU 7	  /* cantidad de opciones del menu */
 #define ULTIMA_OPCION 7	  /* ultima opcion del menu */
-#define TOLERANCIA 30 /* tolerancia de la energia generada y la demandada*/
-#define ESCAPE 1 /* final 1: escape*/
+#define TOLERANCIA 30 	  /* tolerancia de la energia generada y la demandada*/
+#define ESCAPE 1 		  /* final 1: escape*/
 
 // Definir la estructura del reactor
 typedef struct
@@ -22,34 +22,6 @@ typedef struct
 	float temp;
 	float react;
 } Reactor;
-
-// Declaraciones adelantadas de las funciones
-void MostrarMenu(char VecMenu[OPCIONES_MENU][50]);
-void MostrarMonitor(int t, int d, int inc, int def, int exc, int dem);
-void MostrarEstado(bool encendido, float pctagua, float aguav, float reac, float tempe, float presi, bool vapr, bool valvula, float velturb, float potenciaagenerar, float potencia, float dem);
-void CompararGeneracionDemanda(float generacion, float dem);
-void MostrarReactividad(bool encendido, float reac);
-void MostrarPanel(int cantfuelactivo);
-void NombreEscenario(float reac);
-void Finales(int tipofin);
-void MostrarReactividad(bool encendido, float reac);
-int CrearDemanda();
-int PasarTurnos(int turno);
-int PasarDia(int turno, int dia);
-int SeleccionaItem(char VecMenu[OPCIONES_MENU][50]);
-int ObtenerPorcentajeAgua(int actual);
-int CheckeoCatastrofes(float tempactual, float presactual);
-int EscenarioReactividad(float reac);
-int VelocidadTurbina(float presactual, bool hay, bool valvulaabierta);
-int PotenciaElectrica(float vt);
-int CheckeoDiasFinales(float def, float exc);
-float ConvertirAgua(float pctagua);
-float Reactividad(float aguav, float barrasctl);
-float VariacionTermica(float reac, float aguav);
-float Temperatura(float , float , float );
-float TemperaturaApagado(float tempactual);
-float PresionActualizada(float tempactual, float presactual, bool valvulaabierta);
-bool HayVapor(bool encendido, float presi);
 
 int main()
 {
