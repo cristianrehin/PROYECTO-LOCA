@@ -112,8 +112,6 @@ int main()
 				printf("\033[33m Abriendo Valvulas\033[0m\n");
 				printf("\033[33m ...Presione Enter para continuar...\033[0m\n");
 				printf(" \n");
-				printf("\033[33m Decrece la cantidad de Vapor\033[0m\n");
-				printf(" \n");
 				getchar();
 				system("cls");
 				valV = true;
@@ -124,8 +122,6 @@ int main()
 				system("cls");
 				printf("\033[33m Cerrando Valvulas\033[0m\n");
 				printf("\033[33m ...Presione Enter para ontinuar...\033[0m\n");
-				printf(" \n");
-				printf("\033[33m Decrece la cantidad de Vapor\033[0m\n");
 				printf(" \n");
 				getchar();
 				system("cls");
