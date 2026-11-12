@@ -189,8 +189,7 @@ int main()
 					turnosDeficit++;
 				}
 			}
-			turno = PasarTurnos(turno);
-			dia = PasarDia(turno, dia);
+			PasarTurnos(&turno, &dia);
 			if (turno == 0)
 			{
 				/* Un dia cumple si al menos 2 de sus 3 turnos quedaron dentro de +/- 30 MW. */

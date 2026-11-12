@@ -39,8 +39,8 @@ void MostrarPanel(int cantfuelactivo);
 void NombreEscenario(float reac);
 void Finales(int tipofin);
 void MostrarReactividad(bool encendido, float reac);
+void PasarTurnos(int *turno, int *dia);
 int CrearDemanda();
-int PasarTurnos(int turno);
 int PasarDia(int turno, int dia);
 int SeleccionaItem(char VecMenu[OPCIONES_MENU][50]);
 int ObtenerPorcentajeAgua(int actual);
@@ -145,14 +145,14 @@ int CrearDemanda(float anterior)
 	}
 	return demanda;
 }
-int PasarTurnos(int turno)
+void PasarTurnos(int *turno, int *dia)
 {
-    turno++;
-    if (turno >= CANTIDAD_TURNOS)
+	*turno = *turno + 1;
+    if (*turno >= CANTIDAD_TURNOS)
     {
-        turno = 0;
+		*dia = *dia + 1;
+        *turno = 0;
     }
-    return turno;
 }
 int PasarDia(int turno, int dia)
 {
