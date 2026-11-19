@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "utiles.h"
 #include "funciones.h"
 
 #define OPCIONES_MENU 7	  /* cantidad de opciones del menu */
