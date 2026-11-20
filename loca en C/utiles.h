@@ -106,7 +106,7 @@ void pausa()
 // Lee un entero de forma segura con fgets + sscanf
 // Reintenta si la entrada es invalida
 // *********************************************************************************
-int leerEntero(const char *mensaje)
+int leerEntero()
 {
     char buffer[100];
     int numero;
@@ -114,10 +114,9 @@ int leerEntero(const char *mensaje)
 
     while (flag)
     {
-        printf("%s", mensaje);
         if (fgets(buffer, sizeof(buffer), stdin) != NULL)
         {
-            if (sscanf(buffer, "%d", &numero) == 1)
+            if (sscanf(buffer, " %d", &numero) == 1)
                 flag = 0;
             else
                 printf("Entrada invalida. Intente nuevamente.\n");
@@ -129,12 +128,12 @@ int leerEntero(const char *mensaje)
 // *********************************************************************************
 // Lee un entero validando que este dentro del rango [min, max]
 // *********************************************************************************
-int pedirEnteroRango(const char *msj, int min, int max)
+int pedirEnteroRango(int min, int max)
 {
     int n;
     do
     {
-        n = leerEntero(msj);
+        n = leerEntero();
         if (n < min || n > max)
             printf("Fuera de rango [%d - %d]. ", min, max);
     } while (n < min || n > max);

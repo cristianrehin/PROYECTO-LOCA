@@ -5,32 +5,83 @@
 #include <time.h>
 #include "funciones.h"
 
-#define OPCIONES_MENU 7	  /* cantidad de opciones del menu */
-#define TOLERANCIA 30 	  /* tolerancia de la energia generada y la demandada*/
-#define ESCAPE 1 		  /* final 1: escape*/
-
-// Definir la estructura reactor
-typedef struct{
-	int agua;
-	int pot;
-	int barras;
-	float pres;
-	float temp;
-	float react;
-} Reactor;
+/* Funcion de monitoreo definida en SKALA.C. */
+void EvaluarSkala(const Reactor *reactor, int porcentajeAgua);
 
 int main()
 {
+	srand(time(NULL));
 	Reactor reactorSimulado;
-	reactorSimulado.pot = 0, reactorSimulado.pres = 1;
-	reactorSimulado.react = 0, reactorSimulado.temp = 20, reactorSimulado.barras = 11;
-
-	int demanda = 120, dia = 0, opc, turno = 0, cantDiasExc = 0, cantDiasDef = 0, diasSinAccidentes = 0, aguaSolicitada, barrasSolicitadas;
-	int porcentajeAgua = 50, potAGen, queFinal = 0, turnosAceptables = 0, turnosDeficit = 0, turnosExcedidos = 0, vTurb= 0;
-	bool reactorP = false, vapor = false, valV = false;
-	char VecMenu[OPCIONES_MENU][50] = {"Iniciar reactor", "Panel de barras de control", "Abrir/Cerrar valvula de vapor", "Circulacion de agua (porcentaje)", "Terminar turno", "Apagar reactor", "Salir del juego"};
+	FILE *fp;
+	int demanda, dia, opc, turno, cantDiasExc, cantDiasDef, diasSinAccidentes, aguaSolicitada, barrasSolicitadas;
+	int porcentajeAgua, potAGen, queFinal, turnosAceptables, turnosDeficit, turnosExcedidos, vTurb;
+	int reactorP, vapor, valV, existePartidaAnterior;
+	fp = fopen("persistencia.txt", "r");
+	if (fp != NULL)
+		fscanf(fp,"%d",&existePartidaAnterior);
+		else
+			existePartidaAnterior = NO_EXISTE_VALORES_ANTERIORES;
+	
+	if (existePartidaAnterior == VALORES_ANTERIORES)
+	{	
+		if (fp != NULL){
+			fscanf(fp, "%d\n", &demanda);
+			fscanf(fp, "%d\n", &dia);
+			fscanf(fp, "%d\n", &turno);
+			fscanf(fp, "%d\n", &cantDiasExc);
+			fscanf(fp, "%d\n", &cantDiasDef);
+			fscanf(fp, "%d\n", &diasSinAccidentes);
+			fscanf(fp, "%d\n", &porcentajeAgua);
+			fscanf(fp, "%d\n", &potAGen);
+			fscanf(fp, "%d\n", &queFinal);
+			fscanf(fp, "%d\n", &turnosAceptables);
+			fscanf(fp, "%d\n", &turnosDeficit);
+			fscanf(fp, "%d\n", &turnosExcedidos);
+			fscanf(fp, "%d\n", &vTurb);
+			fscanf(fp, "%d\n", &reactorP);
+			fscanf(fp, "%d\n", &vapor);
+			fscanf(fp, "%d\n", &valV);
+			fscanf(fp, "%d\n", &reactorSimulado.pot);
+			fscanf(fp, "%f\n", &reactorSimulado.pres);
+			fscanf(fp, "%f\n", &reactorSimulado.react);
+			fscanf(fp, "%f\n", &reactorSimulado.temp);
+			fscanf(fp, "%d\n", &reactorSimulado.barras);
+			fclose(fp);	
+		}
+	}else{
+		SubirDatosNuevos();
+		fp = fopen("persistencia.txt", "r");
+		if (fp != NULL){
+			int valorCheckeo;
+			fscanf(fp, "%d\n", &valorCheckeo);
+			fscanf(fp, "%d\n", &demanda);
+			fscanf(fp, "%d\n", &dia);
+			fscanf(fp, "%d\n", &turno);
+			fscanf(fp, "%d\n", &cantDiasExc);
+			fscanf(fp, "%d\n", &cantDiasDef);
+			fscanf(fp, "%d\n", &diasSinAccidentes);
+			fscanf(fp, "%d\n", &porcentajeAgua);
+			fscanf(fp, "%d\n", &potAGen);
+			fscanf(fp, "%d\n", &queFinal);
+			fscanf(fp, "%d\n", &turnosAceptables);
+			fscanf(fp, "%d\n", &turnosDeficit);
+			fscanf(fp, "%d\n", &turnosExcedidos);
+			fscanf(fp, "%d\n", &vTurb);
+			fscanf(fp, "%d\n", &reactorP);
+			fscanf(fp, "%d\n", &vapor);
+			fscanf(fp, "%d\n", &valV);
+			fscanf(fp, "%d\n", &reactorSimulado.pot);
+			fscanf(fp, "%f\n", &reactorSimulado.pres);
+			fscanf(fp, "%f\n", &reactorSimulado.react);
+			fscanf(fp, "%f\n", &reactorSimulado.temp);
+			fscanf(fp, "%d\n", &reactorSimulado.barras);
+			fclose(fp);	
+		}
+	}
 	demanda = CrearDemanda(demanda);
 	reactorSimulado.agua = ConvertirAgua(porcentajeAgua);
+	char VecMenu[OPCIONES_MENU][50] = {"Iniciar reactor", "Panel de barras de control", "Abrir/Cerrar valvula de vapor", "Circulacion de agua (porcentaje)", "Terminar turno", "Apagar reactor", "Salir del juego"};
+
 	/*
 	 Variables:
 	 Agua: cant. de agua en el reactor en %.								[agua] Independiente
@@ -54,62 +105,60 @@ int main()
 	 pero en el cambio de dia, deberiamos ver reiniciarse la demanda de energia
 	 pero el jugador debe afrontar las consecuencias de la jornada anterior */
 	/* Fin de la inicializacion de las variables. */
-	srand(time(NULL));
 	system("cls");
 	do
 	{
 		MostrarMonitor(turno, dia, diasSinAccidentes, cantDiasDef, cantDiasExc, demanda);
-		MostrarPanel(reactorSimulado.barras);
-		MostrarEstado(reactorP, porcentajeAgua, reactorSimulado.agua, reactorSimulado.react, reactorSimulado.temp, reactorSimulado.pres, vapor, valV, vTurb, potAGen, reactorSimulado.pot, demanda);
+		MostrarPanel(&reactorSimulado);
+		MostrarEstado(reactorP, porcentajeAgua, &reactorSimulado, vapor, valV, vTurb, potAGen, demanda);
 		MostrarMenu(VecMenu);
 		opc = SeleccionaItem(VecMenu);
 		switch (opc)
 		{
-		case 1:
+		case ENCEN_REACTOR:
 		/* Iniciar el reactor: solo disponible mientras esta apagado. No calcula nada: el estado */
 		/* cambia al terminar el turno (el reactor no genera electricidad de inmediato). */
 		if (reactorP == false)
 		{
 			system("cls");
-			printf("\033[33m Iniciando reactor\033[0m\n");
-			printf("\033[33m Reactor encendido. Configure agua, barras y valvula, y luego termine el turno.\033[0m\n");
-			printf("\033[33m ...Presione Enter para continuar...\033[0m\n");
+			printf("%s Iniciando reactor\n", AMARILLO);
+			printf(" Reactor encendido. Configure agua, barras y valvula, y luego termine el turno.\n");
+			printf(" ...Presione Enter para continuar...%s\n", RESET_FORMATO_TEXTO);
 			printf(" \n");
 			reactorP = true;
-			reactorSimulado.react = Reactividad(reactorSimulado.agua, reactorSimulado.barras);
+			reactorSimulado.react = Reactividad(&reactorSimulado);
 			getchar();
 			system("cls");
 		}else 
 		{
 			system("cls");
-			printf("\033[33m El reactor ya esta prendido. \033[0m\n"); 
-			printf("\033[33m ...Presione Enter para continuar...\033[0m\n");
+			printf("%s El reactor ya esta prendido.\n", AMARILLO); 
+			printf(" ...Presione Enter para continuar...%s\n", RESET_FORMATO_TEXTO);
 			getchar();
 			system("cls");
 		}
 		break;
-		case 2:
+		case INGRESAR_BARRAS:
 			system("cls");
-			printf("\033[33m Ingrese la cantidad de barras de control (0 a 11).\033[0m\n");
+			printf("%s Ingrese la cantidad de barras de control (0 a 11).%s\n", AMARILLO, RESET_FORMATO_TEXTO);
 			barrasSolicitadas = ObtnrBarrasDeControl();
 			/* Aviso previo: retirar todas las barras. SKALA no bloquea ni revierte la accion. */
 			reactorSimulado.barras = barrasSolicitadas;
 			if (reactorP == true)
 			{
-				reactorSimulado.react = Reactividad(reactorSimulado.agua, reactorSimulado.barras);
+				reactorSimulado.react = Reactividad(&reactorSimulado);
 			}
-			printf("\033[33m ...Presione Enter para continuar...\033[0m\n");
+			printf("%s ...Presione Enter para continuar...%s\n", AMARILLO, RESET_FORMATO_TEXTO);
 			printf(" \n");
-			getchar();
 			getchar();
 			system("cls");
 			break;
-		case 3:
+		case ABR_VALVULA:
 			if (valV == false)
 			{
 				system("cls");
-				printf("\033[33m Abriendo Valvulas\033[0m\n");
-				printf("\033[33m ...Presione Enter para continuar...\033[0m\n");
+				printf("%s Abriendo Valvulas\n", AMARILLO);
+				printf(" ...Presione Enter para continuar...%s\n", RESET_FORMATO_TEXTO);
 				printf(" \n");
 				getchar();
 				system("cls");
@@ -119,8 +168,8 @@ int main()
 			else
 			{
 				system("cls");
-				printf("\033[33m Cerrando Valvulas\033[0m\n");
-				printf("\033[33m ...Presione Enter para ontinuar...\033[0m\n");
+				printf("%s Cerrando Valvulas\n", AMARILLO);
+				printf(" ...Presione Enter para ontinuar...%s\n", RESET_FORMATO_TEXTO);
 				printf(" \n");
 				getchar();
 				system("cls");
@@ -128,7 +177,7 @@ int main()
 				/* La potencia se recalcula al terminar el turno, con el estado actualizado. */
 			}
 			break;
-		case 4:
+		case CANT_AGUA:
 			system("cls");
 			aguaSolicitada = ObtenerPorcentajeAgua(porcentajeAgua);
 			porcentajeAgua = aguaSolicitada;
@@ -136,18 +185,17 @@ int main()
 			reactorSimulado.agua = ConvertirAgua(porcentajeAgua);
 			if (reactorP == true)
 			{
-				reactorSimulado.react = Reactividad(reactorSimulado.agua, reactorSimulado.barras);
+				reactorSimulado.react = Reactividad(&reactorSimulado);
 			}
-			printf("\033[33m ...Presione Enter para continuar...\033[0m\n");
+			printf("%s ...Presione Enter para continuar...%s\n", AMARILLO, RESET_FORMATO_TEXTO);
 			printf(" \n");
-			getchar();
 			getchar();
 			system("cls");
 			break;
-		case 5:
+		case FIN_TURNO:
 			system("cls");
-			printf("\033[33m Terminar turno\033[0m\n");
-			printf("\033[33m ...Presione Enter para continuar...\033[0m\n");
+			printf("%s Terminar turno\n", AMARILLO);
+			printf(" ...Presione Enter para continuar...%s\n", RESET_FORMATO_TEXTO);
 			printf(" \n");
 			/* Orden operativo: (1) actualizar estado y potencia una sola vez, (2) evaluar este turno, */
 			/* (3) avanzar turno/dia, (4) si empieza un dia nuevo, evaluar el dia terminado y crear demanda nueva. */
@@ -157,20 +205,22 @@ int main()
 			reactorSimulado.agua = ConvertirAgua(porcentajeAgua);
 			if (reactorP == true)
 			{
-				reactorSimulado.temp = Temperatura(reactorSimulado.react, reactorSimulado.agua, reactorSimulado.temp);
+				reactorSimulado.temp = Temperatura(&reactorSimulado);
 			}
 			else
 			{
 				reactorSimulado.react = 0;
-				reactorSimulado.temp = TemperaturaApagado(reactorSimulado.temp);
+				reactorSimulado.temp = TemperaturaApagado(&reactorSimulado);
 			}
-			reactorSimulado.pres = PresionActualizada(reactorSimulado.temp, reactorSimulado.pres, valV);
-			vapor = HayVapor(reactorP, reactorSimulado.pres);
-			vTurb = VelocidadTurbina(reactorSimulado.pres, vapor, valV);
+			reactorSimulado.pres = PresionActualizada(&reactorSimulado, valV);
+			vapor = HayVapor(reactorP, &reactorSimulado);
+			vTurb = VelocidadTurbina(&reactorSimulado, vapor, valV);
 			potAGen = PotenciaElectrica(vTurb);
+			/* SKALA evalua las condiciones del reactor al cierre de cada turno. */
+			EvaluarSkala(&reactorSimulado, porcentajeAgua);
 			/* pot representa la potencia ACTUAL del turno, no una suma acumulada. */
 			reactorSimulado.pot = potAGen;
-			printf("\033[33m Resultado del turno:\033[0m\n");
+			printf("%s Resultado del turno:%s\n", AMARILLO, RESET_FORMATO_TEXTO);
 			CompararGeneracionDemanda(reactorSimulado.pot, demanda);
 			/* Evaluacion de este turno con tolerancia de +/- 30 MW. */
 			if (reactorSimulado.pot >= demanda - TOLERANCIA && reactorSimulado.pot <= demanda + TOLERANCIA)
@@ -188,7 +238,7 @@ int main()
 					turnosDeficit++;
 				}
 			}
-			PasarTurnos(&turno, &dia);
+			PasarTurnosYDias(&turno, &dia);
 			if (turno == 0)
 			{
 				/* Un dia cumple si al menos 2 de sus 3 turnos quedaron dentro de +/- 30 MW. */
@@ -196,7 +246,7 @@ int main()
 				{
 					cantDiasExc = 0;
 					cantDiasDef = 0;
-					printf("\033[33m Balance diario aceptable: %d de 3 turnos dentro de la tolerancia.\033[0m\n", turnosAceptables);
+					printf("%s Balance diario aceptable: %d de 3 turnos dentro de la tolerancia.%s\n", AMARILLO, turnosAceptables, RESET_FORMATO_TEXTO);
 				}
 				else
 				{
@@ -212,29 +262,29 @@ int main()
 					}
 				}
 				demanda = CrearDemanda(demanda);
-				printf("\033[33m Comienza el dia %d. Nueva demanda: %d MW.\033[0m\n", dia, demanda);
+				printf("%s Comienza el dia %d. Nueva demanda: %d MW.%s\n", AMARILLO, dia, demanda, RESET_FORMATO_TEXTO);
 				/* La potencia actual se conserva al cambiar el dia; no se acumula ni se reinicia. */
 				diasSinAccidentes++;
 				turnosAceptables = 0;
 				turnosExcedidos = 0;
 				turnosDeficit = 0;
-
 			}
+			SubirDatosActualizados(&reactorSimulado,&demanda,&dia,&turno,&cantDiasExc,&cantDiasDef,&diasSinAccidentes,&porcentajeAgua,&potAGen,&queFinal,&turnosAceptables,&turnosDeficit,&turnosExcedidos,&vTurb, &reactorP, &vapor, &valV);
 			getchar();
 			system("cls");
-			opc = 7;
+			opc = SALIR;
 			/* sale del bucle interno; el externo continua porque queFinal sigue en Verdadero */
-			queFinal = CheckeoCatastrofes(reactorSimulado.temp, reactorSimulado.pres);
+			queFinal = CheckeoCatastrofes(&reactorSimulado);
 			if (queFinal == 0)
 			{
 				queFinal = CheckeoDiasFinales(cantDiasDef, cantDiasExc);
 			}
 			break;
-		case 6:
+		case APAG_REACTOR:
 			system("cls");
 			if (reactorP == true)
 			{
-				printf("\033[33m Apagando Reactor\033[0m\n");
+				printf("%s Apagando Reactor\n", AMARILLO);
 				reactorP = false;
 				/* Reactor apagado: sin vapor, turbina detenida y generacion cero. La temperatura y la presion */
 				/* bajan en los proximos turnos (ActualizarEstado). */
@@ -245,36 +295,36 @@ int main()
 			}
 			else
 			{
-				printf("\033[33m El reactor ya esta apagado.\033[0m\n");
+				printf("%s El reactor ya esta apagado.\n", AMARILLO);
 			}
-			printf("\033[33m ...Presione Enter para continuar...\033[0m\n");
+			printf(" ...Presione Enter para continuar...%s\n", RESET_FORMATO_TEXTO);
 			printf(" \n");
 			getchar();
 			system("cls");
 			break;
-		case 7:
+		case ULTIMA_OPCION:
 			system("cls");
-			queFinal = ESCAPE;
+			queFinal = FINAL_ESCAPE;
+			Finales(queFinal);
+			printf(" \n");
+			printf(" ...Presione Enter para continuar...%s\n", RESET_FORMATO_TEXTO);
+			getchar();
 			break;
 		default:
 			system("cls");
-			printf("\033[33mIngrese una opcion valida\033[0m\n");
+			printf("%sIngrese una opcion valida%s\n", AMARILLO, RESET_FORMATO_TEXTO);
 			printf("\n");
 		}
-	} while (queFinal == 0);
+	} while (queFinal == SIGUE_VIVO);
 
 	Finales(queFinal);
 	if (queFinal >= 4)
 	{
 		printf("\n");
-		printf("\033[33mDias completos sobrevividos: %d\033[0m\n", dia - 1);
-		printf("\033[33mPresione una tecla para continuar...\033[0m\n");
+		printf("%sDias completos sobrevividos: %d\n", AMARILLO, dia - 1);
+		printf("Presione la tecla enter para continuar...%s\n", RESET_FORMATO_TEXTO);
 		getchar();
 		system("cls");
-		while (true)
-		{
-			printf(" \n");
-		}
 	}
 	return 0;
 }

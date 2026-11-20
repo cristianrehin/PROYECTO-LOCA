@@ -1,0 +1,34 @@
+Primero que nada, de parte de los tres, queríamos agradecerle profe por darnos otra oportunidad para entregar este proyecto.
+Segundo, si va a ejecutar el exe, le recomendamos que lo ejecute en ventana completa
+
+Permanencia
+
+Agregamos un Sistema de Permanencia para guardar un estado de nuestro reactor para recuperar el estado del juego
+en caso de que se cierre el programa abruptamente. Al final de cada turno se copian las variables importantes al funcionamiento
+del juego, se almacentan en persistencia.txt, cuando se ejecuta el programa, lee ese archivo y recupera los valores para continuar 
+desde donde habiamos quedado. En caso de alcanzar uno de los finales de juego, los contenidos de permanencia.txt son borrados
+para permitir un nuevo inicio de juego
+
+SKALA (Bonus)
+
+SKALA fué el sistema de monitoreo y alarmas del reactor soviético. Era, basícamente, una computadora conectada
+a miles de sensores magneticos y analogicos en la sala del reactor y que era utilizado para monitorear su estado.
+Fue utilizado hasta octubre de 1995 en diferentes reactores RBMK como el de Chernobyl.
+En nuestro proyecto funciona como una computadora de control: revisa las variables qué consideramos de riesgo (temperatura, presión, etc)
+y muestra advertencias o alarmas cuando detecta que los valores se acercan a umbrales pre establecidos.
+Es un agregado para sumar contexto, realismo y una ayuda al jugador que le aconsejo
+
+Validación de datos
+
+Agregamos validaciones para evitar que el usuario pueda ingresar datos erroneos o fuera de rango que rompan el funcionamiento del programa.
+Cuando pedimos numeros, comprobamos que la entrada sea valida y que este dentro del rango permitido. Si el dato no sirve, volvemos a pedirlo.
+Para esto usamos funciones auxiliares que leen la entrada y verifican los valores antes que el programa los utilice.
+
+Uso de punteros y estructuras.
+
+En la ultima modificación ordenamos la forma en que las funciones acceden a los datos del reactor. Ahora le pasamos
+la dirección de la estructura completa mediante un puntero (Reactor *). De esa manera, la función puede acceder a los distintos campos
+usando el operador ->, sin tener que recibir cada variable individualmente. 
+
+
+
